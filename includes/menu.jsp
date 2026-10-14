@@ -10,7 +10,7 @@
 
   <c:choose>
     <c:when test="${sessionScope.rol == 'Administrador'}">
-      <%-- v0.2: Usuarios --%>
+      <a href="${raiz}/admin/usuarios.jsp">Usuarios</a>
     </c:when>
     <c:when test="${sessionScope.rol == 'Estudiante'}">
       <%-- v0.3+: Banco de ideas, Proyecto, Documentos, Calificaciones --%>

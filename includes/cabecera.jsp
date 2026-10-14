@@ -14,3 +14,9 @@
 <body>
 <%@ include file="/includes/menu.jsp" %>
 <main class="contenido">
+<%-- Mensaje de una sola vez (lo deja la pagina de accion antes de redirigir) --%>
+<c:if test="${not empty sessionScope.mensaje}">
+  <p class="${sessionScope.mensajeTipo == 'error' ? 'error' : 'exito'}"><c:out value="${sessionScope.mensaje}" /></p>
+  <c:remove var="mensaje" scope="session" />
+  <c:remove var="mensajeTipo" scope="session" />
+</c:if>

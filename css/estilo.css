@@ -32,3 +32,19 @@ button:hover { background: #29508a; }
 .login h1 { margin-top: 0; font-size: 1.4rem; }
 .login button { width: 100%; }
 .login a { display: block; margin-top: 12px; text-align: center; font-size: .9rem; }
+
+/* ---- v0.2: usuarios ---- */
+.exito { background: #e3f6e8; color: #14532d; padding: 8px 12px; border-radius: 6px; }
+.barra { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.barra h1 { margin: 0; font-size: 1.4rem; }
+.filtros { margin: 12px 0; max-width: 260px; }
+a.boton { display: inline-block; padding: 9px 18px; border-radius: 6px; background: #1e3a5f;
+          color: #fff; text-decoration: none; }
+a.boton:hover { background: #29508a; }
+a.boton.secundario { background: #e5e7eb; color: #1f2937; margin-left: 8px; }
+button.peligro { margin: 0 0 0 8px; padding: 4px 10px; background: #b91c1c; }
+button.peligro:hover { background: #991b1b; }
+td.acciones { white-space: nowrap; }
+td.acciones form { display: inline; }
+.opciones { display: flex; flex-wrap: wrap; gap: 4px 18px; }
+label.opcion { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0; font-weight: 400; }

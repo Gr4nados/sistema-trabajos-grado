@@ -14,3 +14,5 @@ Los que bloqueen el flujo se detienen; los demás se resuelven con un supuesto y
 | 8 | ¿Se permiten JavaBeans / DAO? | No; solo JSP + JSTL (etiquetas sql:) | Pendiente |
 | 9 | ¿Se aceptan las etiquetas sql: de JSTL? | Sí (RNF-03) | Por confirmar |
 | 10 | Un estudiante con varios proyectos | Se muestra el más reciente | Pendiente |
+| 11 | Eliminar un usuario con registros asociados | Se desactiva (activo = FALSE) en vez de borrarlo | Pendiente |
+| 12 | Reglas de roles y contraseña | Dos roles solo Director+Evaluador; estudiante con código; contraseña mínimo 6 caracteres | Supuesto mío |

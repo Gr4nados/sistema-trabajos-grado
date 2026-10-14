@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2 - Módulo de usuarios del administrador
+- `admin/usuarios.jsp`: lista con filtro por rol, roles de cada usuario y estado (RF-03).
+- `admin/usuario_nuevo.jsp`: registro con validaciones (RF-02). Contraseña con SHA2, mínimo 6 caracteres.
+- `admin/usuario_editar.jsp`: edición de datos, roles y estado; contraseña vacía = no cambiarla.
+- `admin/usuario_eliminar.jsp`: elimina; si el usuario tiene registros asociados, lo desactiva.
+- Reglas: dos roles solo si son Director y Evaluador; el estudiante requiere código;
+  el administrador no puede eliminarse ni cambiarse el rol a sí mismo.
+- Mensajes de confirmación de una sola vez (en `includes/cabecera.jsp`).
+
 ## v0.1 - Base del sistema
 - Script MySQL `sql/trabajos_grado.sql` (10 tablas + vista del estudiante + datos iniciales).
   Cambios sobre el script del documento: la llave única de `documento` incluye la fase
