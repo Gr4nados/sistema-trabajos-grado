@@ -1,6 +1,6 @@
 <%--
   menu.jsp - Menu independiente por rol (RF-04). Requiere la fuente de datos "bd".
-  Nota v0.1: solo se listan las paginas que ya existen; se agregan al avanzar.
+  Solo se listan las paginas que ya existen; se agregan al avanzar.
 --%>
 <c:set var="raiz" value="${pageContext.request.contextPath}" />
 <sql:query var="enlaces" dataSource="${bd}">SELECT nombre, url FROM enlace ORDER BY id_enlace</sql:query>
@@ -13,16 +13,27 @@
       <a href="${raiz}/admin/usuarios.jsp">Usuarios</a>
     </c:when>
     <c:when test="${sessionScope.rol == 'Estudiante'}">
-      <%-- v0.3+: Banco de ideas, Proyecto, Documentos, Calificaciones --%>
+      <a href="${raiz}/estudiante/banco_ideas.jsp">Banco de ideas</a>
+      <a href="${raiz}/estudiante/proyecto_nuevo.jsp">Nuevo proyecto</a>
+      <a href="${raiz}/estudiante/asignar_idea.jsp">Asignar idea</a>
+      <a href="${raiz}/estudiante/documentos.jsp">Documentos</a>
+      <a href="${raiz}/estudiante/calificaciones.jsp">Calificaciones</a>
     </c:when>
     <c:when test="${sessionScope.rol == 'Coordinador'}">
-      <%-- v0.4+: Buscar, Ideas pendientes, Asignar director/evaluador, Revisiones, Informes --%>
+      <a href="${raiz}/coordinador/buscar.jsp">Buscar</a>
+      <a href="${raiz}/coordinador/ideas_pendientes.jsp">Ideas pendientes</a>
+      <a href="${raiz}/coordinador/asignar_director.jsp">Asignar director</a>
+      <a href="${raiz}/coordinador/revisiones.jsp">Revisiones</a>
+      <a href="${raiz}/coordinador/informes.jsp">Informes</a>
     </c:when>
     <c:when test="${sessionScope.rol == 'Director'}">
-      <%-- v0.3+: Ideas, Anteproyectos --%>
+      <a href="${raiz}/director/ideas.jsp">Mis ideas</a>
+      <a href="${raiz}/director/anteproyectos.jsp">Anteproyectos</a>
     </c:when>
     <c:when test="${sessionScope.rol == 'Evaluador'}">
-      <%-- v0.5+: Anteproyectos, Turnitin y Rejilla (solo visuales) --%>
+      <a href="${raiz}/evaluador/anteproyectos.jsp">Anteproyectos</a>
+      <a href="${raiz}/evaluador/turnitin.jsp">Turnitin</a>
+      <a href="${raiz}/evaluador/rejilla.jsp">Rejilla</a>
     </c:when>
   </c:choose>
 
