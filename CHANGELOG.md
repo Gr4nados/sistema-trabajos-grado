@@ -1,5 +1,29 @@
 # Changelog
 
+## v0.8 - Ajustes de Ruta.md
+- Enlaces de la universidad: nuevo Calendario académico y Formatos de grado (Dropbox), y nuevo
+  "Reglamento de trabajos de grado" (tabla `enlace`, mostrada en el menú).
+- `coordinador/banco_ideas.jsp`: el coordinador ve todo el banco, acepta o rechaza (con motivo) las
+  ideas de docentes, y edita (`coordinador/idea_editar.jsp`) o elimina ideas. No se elimina una idea ligada a un proyecto.
+- Las ideas de docentes nacen "Pendiente" hasta que el coordinador las acepte; las de estudiantes siguen
+  entrando directo como "Disponible". El estudiante solo ve ideas Disponibles o Asignadas.
+  El docente ve en "Mis ideas" el estado y el motivo si fue rechazada.
+- Radicado: lo escribe el coordinador al asignar la idea en `ideas_pendientes.jsp` (obligatorio y único) y
+  puede completarlo o corregirlo en `asignar_director.jsp`. Se muestra al estudiante y en búsqueda, informes y revisiones.
+- `perfil.jsp` ("Mi perfil"): datos del usuario, para todos los roles.
+- Esquema: `idea.disponibilidad` suma Pendiente y Rechazada, `idea.motivo_rechazo`, `proyecto.radicado` (único) y la
+  vista del estudiante incluye el radicado. Una base existente se actualiza con `sql/migracion_v0.8.sql`.
+
+## v0.7 - Rediseño de interfaces
+- Paleta de la universidad (verde oscuro, lima y morado sobre crema) y estilos nuevos en `css/estilo.css`.
+- Menú lateral por rol, con iconos, grupos y la página activa resaltada; en celular se abre con un botón.
+- Barra superior con el título de la página y el rol; el nombre y "Salir" quedan al pie del menú.
+- Inicio de cada rol con contadores que enlazan a la tarea (coordinador, director, evaluador y administrador).
+- Inicio del estudiante con el indicador de las 6 fases (los nombres de las fases 4 y 5 están por definir).
+- Estados con etiquetas de color (`includes/insignia.jsp`) y recordatorios con etiqueta por tipo.
+- Login y elección de rol con la mascota; animaciones suaves que respetan "reducir movimiento".
+- `js/app.js`: menú en celular y mensajes de éxito que se ocultan solos (solo cliente, RNF-02).
+
 ## v0.6 - Consulta, informes y pantallas visuales
 - `coordinador/buscar.jsp`: busca un estudiante por código o nombre y ve su proyecto (RF-24).
 - `coordinador/informes.jsp`: estado de los proyectos por alumno, por director y por evaluador (RF-25).

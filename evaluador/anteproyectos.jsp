@@ -82,7 +82,7 @@
 </c:if>
 
 <sql:query var="pendientes" dataSource="${bd}">
-  SELECT p.id_proyecto, p.fase, a.titulo,
+  SELECT p.id_proyecto, p.radicado, p.fase, a.titulo,
          (SELECT GROUP_CONCAT(CONCAT(u.nombres, ' ', u.apellidos) SEPARATOR ', ')
             FROM integrante i JOIN usuario u ON u.id_usuario = i.id_usuario
            WHERE i.id_proyecto = p.id_proyecto) AS estudiantes,
@@ -122,7 +122,7 @@
 <c:forEach var="f" items="${pendientes.rows}">
   <c:set var="conError" value="${idConError == f.id_proyecto}" />
   <section class="tarjeta">
-    <h2>Proyecto #<c:out value="${f.id_proyecto}" /> - <c:out value="${f.titulo}" /></h2>
+    <h2>Proyecto #<c:out value="${f.id_proyecto}" /> - <c:out value="${f.titulo}" /><c:if test="${not empty f.radicado}"> <small class="suave">Rad. <c:out value="${f.radicado}" /></small></c:if></h2>
     <table>
       <tr><th>Estudiante(s)</th><td><c:out value="${f.estudiantes}" /></td></tr>
       <tr><th>Fase</th><td><c:out value="${f.fase}" /> de 6</td></tr>
@@ -161,7 +161,7 @@
               <td><c:out value="${o.id_proyecto}" /></td>
               <td><c:out value="${empty o.titulo ? 'Sin idea' : o.titulo}" /></td>
               <td><c:out value="${o.fase}" /></td>
-              <td><c:out value="${o.estado == 'Aprobado' && (o.fase == 3 || o.fase == 5) ? 'Aprobado (espera al coordinador)' : o.estado}" /></td>
+              <td><c:set var="valorInsignia" value="${o.estado}" /><%@ include file="/includes/insignia.jsp" %><c:if test="${o.estado == 'Aprobado' && (o.fase == 3 || o.fase == 5)}"> <small class="suave">espera al coordinador</small></c:if></td>
             </tr>
           </c:forEach>
         </tbody>

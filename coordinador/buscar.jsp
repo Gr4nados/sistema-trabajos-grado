@@ -13,7 +13,7 @@
   <c:set var="patron" value="%${q}%" />
   <sql:query var="res" dataSource="${bd}">
     SELECT u.id_usuario, u.codigo, u.documento, u.nombres, u.apellidos,
-           p.id_proyecto, p.modalidad, p.fase, p.estado, p.fecha_limite, p.papeles_solicitados,
+           p.id_proyecto, p.radicado, p.modalidad, p.fase, p.estado, p.fecha_limite, p.papeles_solicitados,
            a.titulo,
            CONCAT(d.nombres, ' ', d.apellidos) AS director,
            CONCAT(e.nombres, ' ', e.apellidos) AS evaluador
@@ -56,8 +56,9 @@
         <c:otherwise>
           <table>
             <tr><th>Proyecto</th><td>#<c:out value="${f.id_proyecto}" /> · <c:out value="${f.modalidad}" /></td></tr>
+            <tr><th>Radicado</th><td><c:out value="${empty f.radicado ? 'Sin radicado' : f.radicado}" /></td></tr>
             <tr><th>Idea</th><td><c:out value="${empty f.titulo ? 'Sin asignar' : f.titulo}" /></td></tr>
-            <tr><th>Fase / estado</th><td><c:out value="${f.fase}" /> de 6 · <c:out value="${f.estado}" /></td></tr>
+            <tr><th>Fase / estado</th><td><c:out value="${f.fase}" /> de 6 · <c:set var="valorInsignia" value="${f.estado}" /><%@ include file="/includes/insignia.jsp" %></td></tr>
             <tr><th>Director</th><td><c:out value="${empty f.director ? 'Sin asignar' : f.director}" /></td></tr>
             <tr><th>Evaluador</th><td><c:out value="${empty f.evaluador ? 'Sin asignar' : f.evaluador}" /></td></tr>
             <c:if test="${not empty f.fecha_limite}"><tr><th>Fecha límite</th><td><c:out value="${f.fecha_limite}" /></td></tr></c:if>

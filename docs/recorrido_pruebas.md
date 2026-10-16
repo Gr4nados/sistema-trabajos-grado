@@ -7,7 +7,7 @@ Ocho pasos entre roles. Usa la base recién creada con `sql/trabajos_grado.sql`
 |---|-----|--------|--------------------|
 | 1 | Administrador | En `admin/usuario_nuevo.jsp` crea un estudiante (con código), un coordinador, un docente Director y un docente Evaluador. | Los cuatro aparecen en `admin/usuarios.jsp`. |
 | 2 | Estudiante | En `proyecto_nuevo.jsp` crea el proyecto. En `idea_nueva.jsp` propone una idea (o usa una del banco) y en `asignar_idea.jsp` la elige con la URL del recibo. | Proyecto en fase 1; el coordinador recibe el recordatorio "Sin revisar". |
-| 3 | Coordinador | En `ideas_pendientes.jsp` asigna la idea. En `asignar_director.jsp` escoge director, evaluador y (opcional) fecha límite. | Proyecto en fase 2; el estudiante ve a su director y no ve al evaluador. |
+| 3 | Coordinador | En `ideas_pendientes.jsp` asigna la idea escribiendo el radicado (si la idea es de un docente, antes debe aceptarla en `banco_ideas.jsp`). En `asignar_director.jsp` escoge director, evaluador y (opcional) fecha límite. | Proyecto en fase 2; el estudiante ve a su director y no ve al evaluador. |
 | 4 | Estudiante | En `documentos.jsp` registra la URL del anteproyecto. | Versión 1 en `versiones.jsp`; el director recibe un recordatorio. |
 | 5 | Director | En `anteproyectos.jsp` pone nota (0.0 a 5.0) y aprueba. | Proyecto pasa a la fase 3; el evaluador recibe un recordatorio. |
 | 6 | Evaluador | En `anteproyectos.jsp` ve el documento, pone nota y aprueba. | Estado "Aprobado" en la fase 3; el coordinador recibe un recordatorio. |

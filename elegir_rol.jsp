@@ -23,13 +23,20 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css">
 </head>
 <body class="pagina-login">
-  <form class="tarjeta login" method="post" action="elegir_rol.jsp">
-    <h1>Elige tu rol</h1>
-    <p class="suave"><c:out value="${sessionScope.nombreCompleto}" />, ¿con qué rol quieres entrar?</p>
-    <c:forEach var="r" items="${sessionScope.rolesUsuario.rows}">
-      <button type="submit" name="rol" value="${r.nombre}"><c:out value="${r.nombre}" /></button>
-    </c:forEach>
-    <a href="logout.jsp">Cancelar</a>
-  </form>
+  <div class="acceso">
+    <div class="acceso-panel">
+      <img src="${pageContext.request.contextPath}/img/mascota.png" alt="">
+      <h2>¡Hola!</h2>
+      <p>Tienes más de un rol en el sistema</p>
+    </div>
+    <form class="acceso-form" method="post" action="elegir_rol.jsp">
+      <h1>Elige tu rol</h1>
+      <p class="suave"><c:out value="${sessionScope.nombreCompleto}" />, ¿con qué rol quieres entrar?</p>
+      <c:forEach var="r" items="${sessionScope.rolesUsuario.rows}">
+        <button type="submit" name="rol" value="${r.nombre}"><c:out value="${r.nombre}" /></button>
+      </c:forEach>
+      <a href="logout.jsp">Cancelar</a>
+    </form>
+  </div>
 </body>
 </html>

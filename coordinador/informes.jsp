@@ -9,7 +9,7 @@
 <%-- RF-25: estado de los proyectos por alumno, por director y por evaluador. --%>
 <sql:query var="porAlumno" dataSource="${bd}">
   SELECT CONCAT(u.apellidos, ' ', u.nombres) AS alumno, u.codigo,
-         p.id_proyecto, p.fase, p.estado,
+         p.id_proyecto, p.radicado, p.fase, p.estado,
          CONCAT(d.nombres, ' ', d.apellidos) AS director,
          CONCAT(e.nombres, ' ', e.apellidos) AS evaluador
   FROM integrante i
@@ -44,15 +44,16 @@
     <c:when test="${porAlumno.rowCount == 0}"><p class="suave">Aún no hay proyectos.</p></c:when>
     <c:otherwise>
       <table>
-        <thead><tr><th>Alumno</th><th>Código</th><th>Proyecto</th><th>Fase</th><th>Estado</th><th>Director</th><th>Evaluador</th></tr></thead>
+        <thead><tr><th>Alumno</th><th>Código</th><th>Proyecto</th><th>Radicado</th><th>Fase</th><th>Estado</th><th>Director</th><th>Evaluador</th></tr></thead>
         <tbody>
           <c:forEach var="f" items="${porAlumno.rows}">
             <tr>
               <td><c:out value="${f.alumno}" /></td>
               <td><c:out value="${empty f.codigo ? '-' : f.codigo}" /></td>
               <td>#<c:out value="${f.id_proyecto}" /></td>
+              <td><c:out value="${empty f.radicado ? '-' : f.radicado}" /></td>
               <td><c:out value="${f.fase}" /></td>
-              <td><c:out value="${f.estado}" /></td>
+              <td><c:set var="valorInsignia" value="${f.estado}" /><%@ include file="/includes/insignia.jsp" %></td>
               <td><c:out value="${empty f.director ? '-' : f.director}" /></td>
               <td><c:out value="${empty f.evaluador ? '-' : f.evaluador}" /></td>
             </tr>

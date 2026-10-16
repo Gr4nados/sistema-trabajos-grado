@@ -10,13 +10,16 @@
 <%--
   RF-10: el coordinador agrega el director (y el evaluador) al proyecto. El estudiante solo ve
   a su director (vista_proyecto_estudiante). PENDIENTES.md #3: el coordinador asigna ambos.
-  Tambien puede fijar una fecha limite (prorroga), que aparece como recordatorio (RF-17).
+  Tambien puede fijar una fecha limite (prorroga), que aparece como recordatorio (RF-17) y
+  poner o corregir el radicado del proyecto (se pide al aceptar la idea; aqui se completan los
+  proyectos que aun no lo tienen).
   El director no puede ser el evaluador del mismo proyecto (lo exige la base de datos).
 --%>
 <c:if test="${pageContext.request.method == 'POST'}">
   <c:set var="idDir" value="${fn:trim(param.director)}" />
   <c:set var="idEva" value="${fn:trim(param.evaluador)}" />
   <c:set var="fecha" value="${fn:trim(param.fecha_limite)}" />
+  <c:set var="radicado" value="${fn:trim(param.radicado)}" />
   <sql:query var="objetivo" dataSource="${bd}">
     SELECT id_proyecto FROM proyecto WHERE id_proyecto = ? AND fase >= 2
     <sql:param value="${param.id}" />
@@ -49,6 +52,9 @@
     <c:when test="${not empty idEva && okEva.rowCount == 0}">
       <c:set var="error" value="El evaluador escogido no es válido." />
     </c:when>
+    <c:when test="${fn:length(radicado) > 30}">
+      <c:set var="error" value="El radicado no puede superar 30 caracteres." />
+    </c:when>
     <c:when test="${idDir == idEva}">
       <c:set var="error" value="El director no puede ser el evaluador del mismo proyecto." />
     </c:when>
@@ -56,11 +62,13 @@
       <c:catch var="fallo">
         <sql:transaction dataSource="${bd}">
           <sql:update>
-            UPDATE proyecto SET id_director = ?, id_evaluador = NULLIF(?, ''), fecha_limite = NULLIF(?, '')
+            UPDATE proyecto SET id_director = ?, id_evaluador = NULLIF(?, ''), fecha_limite = NULLIF(?, ''),
+                   radicado = NULLIF(?, '')
             WHERE id_proyecto = ?
             <sql:param value="${idDir}" />
             <sql:param value="${idEva}" />
             <sql:param value="${fecha}" />
+            <sql:param value="${radicado}" />
             <sql:param value="${param.id}" />
           </sql:update>
           <sql:update>
@@ -93,6 +101,9 @@
           <c:set var="mensaje" value="Asignación guardada para el proyecto ${param.id}." scope="session" />
           <c:redirect url="/coordinador/asignar_director.jsp" />
         </c:when>
+        <c:when test="${fn:contains(fallo.message, 'Duplicate')}">
+          <c:set var="error" value="Ese radicado ya está asignado a otro proyecto." />
+        </c:when>
         <c:otherwise>
           <c:set var="error" value="No se pudo guardar: ${fallo.message}" />
         </c:otherwise>
@@ -113,7 +124,7 @@
   WHERE r.nombre = 'Evaluador' AND u.activo = TRUE ORDER BY u.apellidos, u.nombres
 </sql:query>
 <sql:query var="proyectos" dataSource="${bd}">
-  SELECT p.id_proyecto, p.fase, p.estado, p.id_director, p.id_evaluador, p.fecha_limite,
+  SELECT p.id_proyecto, p.radicado, p.fase, p.estado, p.id_director, p.id_evaluador, p.fecha_limite,
          a.titulo,
          (SELECT GROUP_CONCAT(CONCAT(u.nombres, ' ', u.apellidos) SEPARATOR ', ')
             FROM integrante i JOIN usuario u ON u.id_usuario = i.id_usuario
@@ -139,8 +150,8 @@
 <c:forEach var="f" items="${proyectos.rows}">
   <c:set var="conError" value="${idConError == f.id_proyecto}" />
   <section class="tarjeta">
-    <h2>Proyecto #<c:out value="${f.id_proyecto}" /> - <c:out value="${f.titulo}" /></h2>
-    <p class="suave"><c:out value="${f.estudiantes}" /> · Fase <c:out value="${f.fase}" /> · <c:out value="${f.estado}" /></p>
+    <h2>Proyecto #<c:out value="${f.id_proyecto}" /> - <c:out value="${f.titulo}" /><c:if test="${not empty f.radicado}"> <small class="suave">Rad. <c:out value="${f.radicado}" /></small></c:if></h2>
+    <p class="suave"><c:out value="${f.estudiantes}" /> · Fase <c:out value="${f.fase}" /> · <c:set var="valorInsignia" value="${f.estado}" /><%@ include file="/includes/insignia.jsp" %></p>
     <form method="post" action="asignar_director.jsp">
       <input type="hidden" name="id" value="${f.id_proyecto}">
       <c:set var="selDir" value="${conError ? param.director : f.id_director}" />
@@ -159,6 +170,9 @@
           <option value="${d.id_usuario}" ${selEva == d.id_usuario ? 'selected' : ''}><c:out value="${d.apellidos} ${d.nombres}" /></option>
         </c:forEach>
       </select>
+      <label for="rad${f.id_proyecto}">Radicado</label>
+      <input type="text" id="rad${f.id_proyecto}" name="radicado" maxlength="30"
+             value="<c:out value='${conError ? param.radicado : f.radicado}' />">
       <label for="fec${f.id_proyecto}">Fecha límite (opcional)</label>
       <input type="date" id="fec${f.id_proyecto}" name="fecha_limite" value="${conError ? param.fecha_limite : f.fecha_limite}">
       <button type="submit">Guardar</button>

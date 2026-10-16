@@ -151,7 +151,7 @@
       <p class="suave">Tu proceso finalizó. Puedes consultar el <a href="versiones.jsp">historial de versiones</a>.</p>
     </c:when>
     <c:otherwise>
-      <p>Fase <strong><c:out value="${p.fase}" /></strong> de 6 · Estado: <strong><c:out value="${p.estado}" /></strong></p>
+      <p>Fase <strong><c:out value="${p.fase}" /></strong> de 6 · Estado: <c:set var="valorInsignia" value="${p.estado}" /><%@ include file="/includes/insignia.jsp" %></p>
       <c:if test="${not empty error}"><p class="error"><c:out value="${error}" /></p></c:if>
 
       <c:choose>

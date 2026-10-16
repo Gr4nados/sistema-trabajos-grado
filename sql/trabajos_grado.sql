@@ -1,5 +1,5 @@
 -- ============================================================
--- trabajos_grado.sql  (v0.1)
+-- trabajos_grado.sql  (v0.8)
 -- Motor: MySQL 8.0  |  Se ejecuta desde MySQL Workbench
 -- ATENCION: borra y recrea la base de datos trabajos_grado.
 -- ============================================================
@@ -41,7 +41,9 @@ CREATE TABLE idea (
   linea_investigacion VARCHAR(120) NULL,
   nivel ENUM('Tecnológico','Profesional') NOT NULL,
   periodo_academico VARCHAR(10) NOT NULL,
-  disponibilidad ENUM('Disponible','Asignada') NOT NULL DEFAULT 'Disponible',
+  -- Pendiente: idea de un docente a la espera del coordinador; Rechazada: ver motivo_rechazo
+  disponibilidad ENUM('Pendiente','Disponible','Asignada','Rechazada') NOT NULL DEFAULT 'Disponible',
+  motivo_rechazo VARCHAR(300) NULL,
   id_proponente INT UNSIGNED NOT NULL,         -- docente o estudiante que la propone
   creada_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_proponente) REFERENCES usuario (id_usuario)
@@ -49,6 +51,7 @@ CREATE TABLE idea (
 
 CREATE TABLE proyecto (
   id_proyecto INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+  radicado VARCHAR(30) NULL UNIQUE,            -- lo asigna el coordinador al aceptar el proyecto
   modalidad ENUM('Desarrollo tecnológico','Emprendimiento','Monografía','Proyecto de investigación') NOT NULL,
   id_idea INT UNSIGNED NULL UNIQUE,            -- idea asignada (1 a 1)
   id_director INT UNSIGNED NULL,
@@ -127,7 +130,7 @@ CREATE TABLE enlace (
 -- El estudiante ve su proyecto y a su director, NUNCA al evaluador.
 CREATE VIEW vista_proyecto_estudiante AS
 SELECT i.id_usuario AS id_estudiante,
-       p.id_proyecto, p.modalidad, p.fase, p.estado, p.fecha_limite,
+       p.id_proyecto, p.radicado, p.modalidad, p.fase, p.estado, p.fecha_limite,
        a.titulo AS idea_titulo,
        d.nombres AS director_nombres, d.apellidos AS director_apellidos
 FROM proyecto p
@@ -148,5 +151,6 @@ SELECT u.id_usuario, r.id_rol FROM usuario u, rol r
 WHERE u.usuario = 'admin' AND r.nombre = 'Administrador';
 
 INSERT INTO enlace (nombre, url) VALUES
-  ('Calendario académico', 'https://www.uts.edu.co'),
-  ('Formatos de grado', 'https://www.uts.edu.co');
+  ('Calendario académico', 'https://www.uts.edu.co/calendario-academico/'),
+  ('Formatos de grado', 'https://www.dropbox.com/scl/fo/pudgcaq639agy7t06ahjs/AN084HnuyHffgYL5i--v_Ks/DOCUMENTOS%20DE%20GRADO?rlkey=6s0b9ajweteyx2ang7ywvk6xm&subfolder_nav_tracking=1&e=1&dl=0'),
+  ('Reglamento de trabajos de grado', 'https://www.uts.edu.co/sitio/wp-content/uploads/normatividad/acuerdos/acu-73.pdf');

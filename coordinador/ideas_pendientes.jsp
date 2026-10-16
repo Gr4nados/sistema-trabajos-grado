@@ -14,6 +14,7 @@
   - Asignar: la idea pasa a "Asignada" y el proyecto avanza a la fase 2.
   - Rechazar: se libera la idea del proyecto para que el estudiante escoja otra.
   Cada decision queda en la tabla revision (RNF-08).
+  Al asignar, el coordinador escribe el radicado del proyecto aceptado (obligatorio y unico).
 --%>
 <c:if test="${pageContext.request.method == 'POST'}">
   <sql:query var="objetivo" dataSource="${bd}">
@@ -22,6 +23,7 @@
     <sql:param value="${param.id}" />
   </sql:query>
   <c:set var="motivo" value="${fn:trim(param.motivo)}" />
+  <c:set var="radicado" value="${fn:trim(param.radicado)}" />
   <c:choose>
     <c:when test="${objetivo.rowCount == 0}">
       <c:set var="mensaje" value="Ese proyecto ya no está pendiente de revisión." scope="session" />
@@ -30,6 +32,10 @@
     </c:when>
     <c:when test="${param.decision == 'rechazar' && empty motivo}">
       <c:set var="error" value="Para rechazar debes escribir el motivo." />
+      <c:set var="idConError" value="${param.id}" />
+    </c:when>
+    <c:when test="${param.decision == 'asignar' && (empty radicado || fn:length(radicado) > 30)}">
+      <c:set var="error" value="Para asignar escribe el radicado del proyecto (máximo 30 caracteres)." />
       <c:set var="idConError" value="${param.id}" />
     </c:when>
     <c:when test="${param.decision == 'asignar' || param.decision == 'rechazar'}">
@@ -45,7 +51,8 @@
                 <sql:param value="${idIdea}" />
               </sql:update>
               <sql:update>
-                UPDATE proyecto SET fase = 2 WHERE id_proyecto = ?
+                UPDATE proyecto SET fase = 2, radicado = ? WHERE id_proyecto = ?
+                <sql:param value="${radicado}" />
                 <sql:param value="${idProyecto}" />
               </sql:update>
             </c:when>
@@ -73,8 +80,12 @@
       </c:catch>
       <c:choose>
         <c:when test="${empty fallo}">
-          <c:set var="mensaje" value="${asignar ? 'Idea asignada: el proyecto avanzó a la fase 2.' : 'Idea rechazada: el estudiante podrá escoger otra.'}" scope="session" />
+          <c:set var="mensaje" value="${asignar ? 'Idea asignada con el radicado ${radicado}: el proyecto avanzó a la fase 2.' : 'Idea rechazada: el estudiante podrá escoger otra.'}" scope="session" />
           <c:redirect url="/coordinador/ideas_pendientes.jsp" />
+        </c:when>
+        <c:when test="${fn:contains(fallo.message, 'Duplicate')}">
+          <c:set var="error" value="Ese radicado ya está asignado a otro proyecto." />
+          <c:set var="idConError" value="${param.id}" />
         </c:when>
         <c:otherwise>
           <c:set var="error" value="No se pudo guardar la decisión: ${fallo.message}" />
@@ -124,6 +135,9 @@
 
     <form method="post" action="ideas_pendientes.jsp" class="decision">
       <input type="hidden" name="id" value="${f.id_proyecto}">
+      <label for="rad${f.id_proyecto}">Radicado (obligatorio para asignar)</label>
+      <input type="text" id="rad${f.id_proyecto}" name="radicado" maxlength="30"
+             value="<c:out value='${idConError == f.id_proyecto ? param.radicado : ""}' />">
       <label for="motivo${f.id_proyecto}">Motivo (obligatorio para rechazar)</label>
       <textarea id="motivo${f.id_proyecto}" name="motivo" rows="2"><c:out value="${idConError == f.id_proyecto ? param.motivo : ''}" /></textarea>
       <button type="submit" name="decision" value="asignar">Asignar idea</button>

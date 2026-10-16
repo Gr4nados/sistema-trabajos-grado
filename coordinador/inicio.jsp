@@ -9,10 +9,28 @@
 <c:set var="titulo" value="Inicio" />
 <%@ include file="/includes/cabecera.jsp" %>
 
+<sql:query var="n" dataSource="${bd}">
+  SELECT
+    (SELECT COUNT(*) FROM proyecto WHERE fase = 1 AND id_idea IS NOT NULL) AS ideas,
+    (SELECT COUNT(*) FROM idea WHERE disponibilidad = 'Pendiente') AS ideas_docentes,
+    (SELECT COUNT(*) FROM proyecto WHERE fase >= 2 AND id_director IS NULL) AS sin_director,
+    (SELECT COUNT(*) FROM proyecto WHERE fase IN (3, 5) AND estado = 'Aprobado') AS revisiones,
+    (SELECT COUNT(*) FROM proyecto WHERE papeles_solicitados = TRUE) AS papeles
+</sql:query>
+<c:set var="d" value="${n.rows[0]}" />
+
 <section class="tarjeta">
   <h1>Bienvenido, <c:out value="${sessionScope.nombreCompleto}" /></h1>
-  <p class="suave">Aquí verás los proyectos pendientes de revisión.</p>
+  <p class="suave">Esto es lo que necesita tu atención hoy.</p>
 </section>
+
+<div class="tablero">
+  <a class="dato" href="banco_ideas.jsp"><span class="num"><c:out value="${d.ideas_docentes}" /></span><span class="rot">Ideas de docentes por revisar</span></a>
+  <a class="dato" href="ideas_pendientes.jsp"><span class="num"><c:out value="${d.ideas}" /></span><span class="rot">Ideas de proyectos por asignar</span></a>
+  <a class="dato morado" href="asignar_director.jsp"><span class="num"><c:out value="${d.sin_director}" /></span><span class="rot">Proyectos sin director</span></a>
+  <a class="dato verde" href="revisiones.jsp"><span class="num"><c:out value="${d.revisiones}" /></span><span class="rot">Revisiones por aceptar</span></a>
+  <a class="dato" href="informes.jsp"><span class="num"><c:out value="${d.papeles}" /></span><span class="rot">Papeles de grado solicitados</span></a>
+</div>
 
 <%@ include file="/includes/recordatorios.jsp" %>
 <%@ include file="/includes/pie.jsp" %>

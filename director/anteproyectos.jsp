@@ -95,7 +95,7 @@
 </c:if>
 
 <sql:query var="pendientes" dataSource="${bd}">
-  SELECT p.id_proyecto, p.fase, a.titulo,
+  SELECT p.id_proyecto, p.radicado, p.fase, a.titulo,
          (SELECT GROUP_CONCAT(CONCAT(u.nombres, ' ', u.apellidos, ' - doc. ', u.documento, IFNULL(CONCAT(' - cód. ', u.codigo), ''))
                               SEPARATOR '; ')
             FROM integrante i JOIN usuario u ON u.id_usuario = i.id_usuario
@@ -135,7 +135,7 @@
 <c:forEach var="f" items="${pendientes.rows}">
   <c:set var="conError" value="${idConError == f.id_proyecto}" />
   <section class="tarjeta">
-    <h2>Proyecto #<c:out value="${f.id_proyecto}" /> - <c:out value="${f.titulo}" /></h2>
+    <h2>Proyecto #<c:out value="${f.id_proyecto}" /> - <c:out value="${f.titulo}" /><c:if test="${not empty f.radicado}"> <small class="suave">Rad. <c:out value="${f.radicado}" /></small></c:if></h2>
     <table>
       <tr><th>Estudiante(s)</th><td><c:out value="${f.estudiantes}" /></td></tr>
       <tr><th>Fase</th><td><c:out value="${f.fase}" /> de 6</td></tr>
@@ -172,7 +172,7 @@
               <td><c:out value="${empty o.titulo ? 'Sin idea' : o.titulo}" /></td>
               <td><c:out value="${o.estudiantes}" /></td>
               <td><c:out value="${o.fase}" /></td>
-              <td><c:out value="${o.estado}" /></td>
+              <td><c:set var="valorInsignia" value="${o.estado}" /><%@ include file="/includes/insignia.jsp" %></td>
             </tr>
           </c:forEach>
         </tbody>

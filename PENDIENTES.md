@@ -27,3 +27,6 @@ Los que bloqueen el flujo se detienen; los demás se resuelven con un supuesto y
 | 21 | Evaluador aún sin asignar al aprobar el director | El proyecto espera en la fase 3 y se avisa a la coordinación | Supuesto mío |
 | 22 | Eliminar un documento | Solo el registrado en la fase actual y antes de que alguien lo revise | Supuesto mío |
 | 23 | Fecha límite | La fija el coordinador al asignar director; genera recordatorio al estudiante y al director | Supuesto mío |
+| 24 | Aceptación de ideas de docentes | Las ideas de docentes quedan Pendiente hasta que el coordinador las acepte o rechace; las del estudiante entran directo al banco | Supuesto mío (interpreta Ruta.md, act. 4) |
+| 25 | Radicado | Texto libre (máx. 30), único, lo escribe el coordinador al asignar la idea de la fase 1 (formato por definir) | Supuesto mío (Ruta.md, act. 6) |
+| 26 | Eliminar ideas del banco | El coordinador puede eliminarlas salvo que estén ligadas a un proyecto | Supuesto mío (Ruta.md, act. 5) |

@@ -3,7 +3,11 @@
   Lo comparten director/idea_nueva.jsp y estudiante/idea_nueva.jsp.
   La pagina que lo incluye ya hizo: taglibs c, sql, fmt, fn, seguridad, conexion, catalogos,
   y define la variable "destino" (a donde ir tras guardar).
+  La idea de un docente (Director/Evaluador) nace "Pendiente" hasta que el coordinador la acepte
+  (pasa a "Disponible") o la rechace; la de un estudiante nace "Disponible" (PENDIENTES.md #13).
 --%>
+<c:set var="esDocente" value="${sessionScope.rol != 'Estudiante'}" />
+<c:set var="estadoIdea" value="${esDocente ? 'Pendiente' : 'Disponible'}" />
 <c:if test="${pageContext.request.method == 'POST'}">
   <c:set var="claveMod" value="|${param.modalidad}|" />
   <c:choose>
@@ -19,9 +23,6 @@
     <c:when test="${param.nivel != 'Tecnológico' && param.nivel != 'Profesional'}">
       <c:set var="error" value="Selecciona un nivel válido." />
     </c:when>
-    <c:when test="${param.disponibilidad != 'Disponible' && param.disponibilidad != 'Asignada'}">
-      <c:set var="error" value="Selecciona la disponibilidad." />
-    </c:when>
     <c:otherwise>
       <c:catch var="fallo">
         <sql:update dataSource="${bd}">
@@ -34,13 +35,13 @@
           <sql:param value="${fn:trim(param.linea_investigacion)}" />
           <sql:param value="${param.nivel}" />
           <sql:param value="${fn:trim(param.periodo_academico)}" />
-          <sql:param value="${param.disponibilidad}" />
+          <sql:param value="${estadoIdea}" />
           <sql:param value="${sessionScope.idUsuario}" />
         </sql:update>
       </c:catch>
       <c:choose>
         <c:when test="${empty fallo}">
-          <c:set var="mensaje" value="Idea guardada correctamente." scope="session" />
+          <c:set var="mensaje" value="${esDocente ? 'Idea enviada: queda pendiente de aceptación del coordinador.' : 'Idea guardada correctamente.'}" scope="session" />
           <c:redirect url="${destino}" />
         </c:when>
         <c:otherwise>
@@ -88,11 +89,11 @@
     <input type="text" id="periodo_academico" name="periodo_academico" maxlength="10" required
            value="<c:out value='${param.periodo_academico}' />">
 
-    <label for="disponibilidad">Disponibilidad *</label>
-    <select id="disponibilidad" name="disponibilidad" required>
-      <option value="Disponible" ${param.disponibilidad != 'Asignada' ? 'selected' : ''}>Disponible</option>
-      <option value="Asignada" ${param.disponibilidad == 'Asignada' ? 'selected' : ''}>Asignada</option>
-    </select>
+    <label>Disponibilidad</label>
+    <p class="suave"><c:choose>
+      <c:when test="${esDocente}">Al guardar, la idea queda <strong>Pendiente</strong> hasta que el coordinador la acepte para el banco.</c:when>
+      <c:otherwise>Al guardar, la idea queda <strong>Disponible</strong> en el banco.</c:otherwise>
+    </c:choose></p>
 
     <button type="submit">Guardar idea</button>
     <a class="boton secundario" href="${pageContext.request.contextPath}${destino}">Cancelar</a>

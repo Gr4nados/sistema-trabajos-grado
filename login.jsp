@@ -57,18 +57,25 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css">
 </head>
 <body class="pagina-login">
-  <form class="tarjeta login" method="post" action="login.jsp">
-    <h1>Trabajos de Grado</h1>
-    <p class="suave">Ingresa con tu usuario y contraseña.</p>
-    <c:if test="${not empty error}">
-      <p class="error"><c:out value="${error}" /></p>
-    </c:if>
-    <label for="usuario">Usuario</label>
-    <input type="text" id="usuario" name="usuario" required autofocus
-           value="<c:out value='${param.usuario}' />">
-    <label for="clave">Contraseña</label>
-    <input type="password" id="clave" name="clave" required>
-    <button type="submit">Entrar</button>
-  </form>
+  <div class="acceso">
+    <div class="acceso-panel">
+      <img src="${pageContext.request.contextPath}/img/mascota.png" alt="">
+      <h2>Trabajos de Grado</h2>
+      <p>Sigue tu proyecto de principio a fin</p>
+    </div>
+    <form class="acceso-form" method="post" action="login.jsp">
+      <h1>Iniciar sesión</h1>
+      <p class="suave">Ingresa con tu usuario y contraseña.</p>
+      <c:if test="${not empty error}">
+        <p class="error"><c:out value="${error}" /></p>
+      </c:if>
+      <label for="usuario">Usuario</label>
+      <input type="text" id="usuario" name="usuario" required autofocus
+             value="<c:out value='${param.usuario}' />">
+      <label for="clave">Contraseña</label>
+      <input type="password" id="clave" name="clave" required>
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
 </body>
 </html>

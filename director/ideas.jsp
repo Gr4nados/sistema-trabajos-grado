@@ -8,7 +8,7 @@
 <%@ include file="/includes/conexion.jsp" %>
 <%-- RF-05: el director publica ideas para el banco y ve las suyas. --%>
 <sql:query var="ideas" dataSource="${bd}">
-  SELECT id_idea, titulo, modalidad, nivel, periodo_academico, disponibilidad
+  SELECT id_idea, titulo, modalidad, nivel, periodo_academico, disponibilidad, motivo_rechazo
   FROM idea WHERE id_proponente = ? ORDER BY id_idea DESC
   <sql:param value="${sessionScope.idUsuario}" />
 </sql:query>
@@ -34,7 +34,8 @@
               <td><c:out value="${i.modalidad}" /></td>
               <td><c:out value="${i.nivel}" /></td>
               <td><c:out value="${i.periodo_academico}" /></td>
-              <td><c:out value="${i.disponibilidad}" /></td>
+              <td><c:set var="valorInsignia" value="${i.disponibilidad}" /><%@ include file="/includes/insignia.jsp" %>
+                <c:if test="${i.disponibilidad == 'Rechazada' && not empty i.motivo_rechazo}"><br><small class="suave">Motivo: <c:out value="${i.motivo_rechazo}" /></small></c:if></td>
             </tr>
           </c:forEach>
         </tbody>

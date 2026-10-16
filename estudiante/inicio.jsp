@@ -28,11 +28,21 @@
     </c:when>
     <c:otherwise>
       <c:set var="p" value="${proy.rows[0]}" />
+      <%-- Indicador de las 6 fases; los nombres de 4 y 5 estan por definir (PENDIENTES.md #1) --%>
+      <ol class="pasos">
+        <c:forTokens var="nombreFase" items="Idea y recibo|Anteproyecto|Evaluación|Entrega 2|Evaluación 2|Finalizado" delims="|" varStatus="v">
+          <li class="${v.count < p.fase ? 'hecho' : (v.count == p.fase ? 'actual' : '')}">
+            <span class="punto"><c:choose><c:when test="${v.count < p.fase || p.fase == 6}">&#10003;</c:when><c:otherwise><c:out value="${v.count}" /></c:otherwise></c:choose></span>
+            <c:out value="${nombreFase}" />
+          </li>
+        </c:forTokens>
+      </ol>
       <table>
+        <c:if test="${not empty p.radicado}"><tr><th>Radicado</th><td><c:out value="${p.radicado}" /></td></tr></c:if>
         <tr><th>Modalidad</th><td><c:out value="${p.modalidad}" /></td></tr>
         <tr><th>Idea</th><td><c:out value="${empty p.idea_titulo ? 'Sin asignar' : p.idea_titulo}" /></td></tr>
         <tr><th>Fase</th><td><c:out value="${p.fase}" /> de 6</td></tr>
-        <tr><th>Estado</th><td><c:out value="${p.estado}" /></td></tr>
+        <tr><th>Estado</th><td><c:set var="valorInsignia" value="${p.estado}" /><%@ include file="/includes/insignia.jsp" %></td></tr>
         <tr><th>Director</th><td>
           <c:choose>
             <c:when test="${empty p.director_nombres}">Sin asignar</c:when>

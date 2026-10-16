@@ -62,7 +62,7 @@
               <td><c:out value="${f.apellidos}, ${f.nombres}" /></td>
               <td><c:out value="${f.usuario}" /></td>
               <td><c:out value="${f.roles}" /></td>
-              <td><c:out value="${f.activo == 1 ? 'Activo' : 'Inactivo'}" /></td>
+              <td><c:set var="valorInsignia" value="${f.activo == 1 ? 'Activo' : 'Inactivo'}" /><%@ include file="/includes/insignia.jsp" %></td>
               <td class="acciones">
                 <a href="usuario_editar.jsp?id=${f.id_usuario}">Editar</a>
                 <c:if test="${f.id_usuario != sessionScope.idUsuario}">

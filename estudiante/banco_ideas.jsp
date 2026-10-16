@@ -16,7 +16,8 @@
                      WHERE ur.id_usuario = i.id_proponente AND r.nombre IN ('Director', 'Evaluador')),
             'Docente', 'Estudiante') AS tipo_proponente
   FROM idea i JOIN usuario u ON u.id_usuario = i.id_proponente
-  WHERE ? = 0 OR i.disponibilidad = 'Disponible'
+  WHERE i.disponibilidad IN ('Disponible', 'Asignada')
+    AND (? = 0 OR i.disponibilidad = 'Disponible')
   ORDER BY i.id_idea DESC
   <sql:param value="${soloDisp ? 1 : 0}" />
 </sql:query>
@@ -56,7 +57,7 @@
                   </c:if>
                 </details>
               </td>
-              <td><c:out value="${i.disponibilidad}" /></td>
+              <td><c:set var="valorInsignia" value="${i.disponibilidad}" /><%@ include file="/includes/insignia.jsp" %></td>
               <td><c:out value="${i.periodo_academico}" /></td>
               <td><c:out value="${i.nivel}" /></td>
               <td><c:out value="${i.proponente}" /> (<c:out value="${i.tipo_proponente}" />)</td>
