@@ -28,10 +28,10 @@
 <section class="tarjeta">
   <div class="barra">
     <h1>Banco de ideas</h1>
-    <a class="boton" href="idea_nueva.jsp">Proponer una idea</a>
+    <a class="boton" href="idea_nueva.jsp"><svg class="ico"><use href="#i-mas"/></svg>Proponer una idea</a>
   </div>
   <form method="get" action="banco_ideas.jsp" class="filtros">
-    <label class="opcion">
+    <label class="opcion interruptor">
       <input type="checkbox" name="disp" value="1" ${soloDisp ? 'checked' : ''} onchange="this.form.submit()">
       Solo ideas disponibles
     </label>

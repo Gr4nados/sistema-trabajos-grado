@@ -117,7 +117,8 @@
 
   <c:choose>
     <c:when test="${proy.rowCount == 0}">
-      <p class="suave">Primero debes <a href="proyecto_nuevo.jsp">crear tu proyecto</a>.</p>
+      <p class="suave">Primero debes crear tu proyecto.</p>
+      <a class="boton" href="proyecto_nuevo.jsp"><svg class="ico"><use href="#i-mas"/></svg>Crear mi proyecto</a>
     </c:when>
 
     <c:when test="${p.fase != 1}">
@@ -139,7 +140,8 @@
 
       <c:choose>
         <c:when test="${disponibles.rowCount == 0}">
-          <p class="suave">No hay ideas disponibles. Puedes <a href="idea_nueva.jsp">proponer una propia</a> y volver.</p>
+          <p class="suave">No hay ideas disponibles. Puedes proponer una propia y volver.</p>
+          <a class="boton" href="idea_nueva.jsp"><svg class="ico"><use href="#i-mas"/></svg>Proponer una idea</a>
         </c:when>
         <c:otherwise>
           <form method="post" action="asignar_idea.jsp">
@@ -152,7 +154,8 @@
                   <small class="suave">(<c:out value="${d.modalidad}" />, <c:out value="${d.nivel}" />, <c:out value="${d.periodo_academico}" />)</small></span>
               </label>
             </c:forEach>
-            <p class="suave">¿No ves la tuya? <a href="idea_nueva.jsp">Propón una idea</a> y vuelve aquí.</p>
+            <p class="suave">¿No ves la tuya? Propón una idea y vuelve aquí.</p>
+            <a class="boton pequeno contorno" href="idea_nueva.jsp"><svg class="ico"><use href="#i-mas"/></svg>Proponer una idea</a>
 
             <label for="url_recibo">URL del recibo de pago *</label>
             <input type="url" id="url_recibo" name="url_recibo" maxlength="500" required
@@ -175,7 +178,7 @@
         <c:forEach var="r" items="${recibos.rows}">
           <tr>
             <td><c:out value="${r.version}" /></td>
-            <td><a href="<c:out value='${r.url}' />" target="_blank" rel="noopener"><c:out value="${r.url}" /></a></td>
+            <td><a class="chip-enlace" href="<c:out value='${r.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${r.url}" /></a></td>
             <td><c:out value="${r.subido_en}" /></td>
           </tr>
         </c:forEach>

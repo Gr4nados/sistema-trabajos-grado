@@ -54,7 +54,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Iniciar sesión - Trabajos de Grado</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=0.9.3">
 </head>
 <body class="pagina-login">
   <div class="acceso">

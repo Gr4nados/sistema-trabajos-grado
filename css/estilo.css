@@ -150,18 +150,74 @@ form.decision { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0 4p
 form.decision label, form.decision textarea, form.decision input[type=text] { flex: 1 1 100%; }
 form.decision button { margin-right: 4px; }
 form.decision button.peligro, form.decision button.secundario { margin-left: 0; padding: 10px 20px; }
-.opciones { display: flex; flex-wrap: wrap; gap: 4px 18px; }
-label.opcion { display: inline-flex; align-items: center; gap: 8px; margin: 4px 0; font-weight: 400; color: var(--tinta); }
-label.opcion.bloque { display: flex; align-items: flex-start; padding: 10px 8px; border-bottom: 1px solid var(--borde);
-                      border-radius: 8px; cursor: pointer; transition: background .12s; }
-label.opcion.bloque:hover { background: var(--lima-suave); }
-input[type=radio], input[type=checkbox] { accent-color: var(--verde-700); width: 17px; height: 17px; }
-details summary { cursor: pointer; font-weight: 600; color: var(--morado); }
 details p { margin: 6px 0; font-weight: 400; }
 .barra { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .barra h1 { margin: 0; }
 .barra a.boton { margin-top: 0; }
 .filtros { margin: 12px 0; max-width: 280px; }
+
+/* ---------- Controles modernos (v0.9.2) ---------- */
+a { text-underline-offset: 3px; }
+select { appearance: none; -webkit-appearance: none; padding-right: 42px; cursor: pointer;
+         background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231b5e35' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center / 16px; }
+select:hover { border-color: var(--verde-600); }
+
+/* Casillas y opciones: cuadro o circulo propio, sin el control gris del navegador */
+input[type=radio], input[type=checkbox] { appearance: none; -webkit-appearance: none; flex: none; width: 21px; height: 21px;
+  margin: 0; display: inline-grid; place-content: center; border: 2px solid #b9b4a3; background: #fff; cursor: pointer;
+  transition: background .15s, border-color .15s; }
+input[type=radio] { border-radius: 50%; }
+input[type=checkbox] { border-radius: 7px; }
+input[type=radio]::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #fff; transform: scale(0); transition: transform .15s; }
+input[type=radio]:checked { background: var(--verde-700); border-color: var(--verde-700); }
+input[type=radio]:checked::before { transform: scale(1); }
+input[type=checkbox]:checked { background: var(--verde-700) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 14px no-repeat; border-color: var(--verde-700); }
+input[type=radio]:focus-visible, input[type=checkbox]:focus-visible { outline: 3px solid rgba(183, 209, 31, .65); outline-offset: 2px; }
+input[type=radio]:disabled, input[type=checkbox]:disabled { opacity: .55; cursor: not-allowed; }
+
+.opciones { display: flex; flex-wrap: wrap; gap: 10px; }
+label.opcion { display: inline-flex; align-items: center; gap: 10px; margin: 4px 0; padding: 9px 16px; border: 1px solid var(--borde);
+               border-radius: 999px; background: #fff; font-weight: 500; color: var(--tinta); cursor: pointer;
+               transition: border-color .15s, background .15s, box-shadow .15s; }
+label.opcion:hover { border-color: var(--verde-600); background: var(--lima-suave); }
+label.opcion:has(input:checked) { border-color: var(--verde-700); background: var(--lima-suave); box-shadow: inset 0 0 0 1px var(--verde-700); }
+label.opcion:has(input:disabled) { opacity: .6; cursor: not-allowed; }
+label.opcion.bloque { display: flex; align-items: flex-start; margin: 8px 0; padding: 12px 16px; border-radius: 12px; }
+
+/* Interruptor (filtros y "cuenta activa") */
+label.interruptor, label.interruptor:hover, label.interruptor:has(input:checked) { display: flex; width: fit-content; padding: 0; margin: 12px 0 4px;
+  border: 0; border-radius: 0; background: none; box-shadow: none; gap: 12px; font-weight: 600; color: var(--verde-800); }
+label.interruptor input[type=checkbox] { position: relative; width: 46px; height: 26px; border: 0; border-radius: 999px; background: #cfcab9; }
+label.interruptor input[type=checkbox]::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .3); transition: transform .2s; }
+label.interruptor input[type=checkbox]:checked { background: var(--verde-600) none; }
+label.interruptor input[type=checkbox]:checked::after { transform: translateX(20px); }
+
+/* Botones: iconos, tamanos y contorno */
+button, a.boton { box-shadow: 0 1px 2px rgba(15, 59, 36, .18); }
+button .ico, a.boton .ico { width: 18px; height: 18px; }
+a.boton.pequeno, button.pequeno { margin-top: 0; padding: 6px 12px; font-size: .86rem; border-radius: 8px; }
+a.boton.contorno { background: transparent; color: var(--verde-700); box-shadow: inset 0 0 0 1.5px var(--verde-700); }
+a.boton.contorno:hover { background: var(--verde-700); color: #fff; }
+td.acciones > a.boton, td.acciones > form { vertical-align: middle; margin-right: 8px; }
+td.acciones button.peligro { margin: 0; padding: 6px 12px; font-size: .86rem; border-radius: 8px; vertical-align: middle; }
+.acceso-form a.boton { display: flex; width: 100%; margin: 12px 0 0; }
+.acciones-fila { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.acciones-fila a.boton { margin: 0; }
+
+/* Enlaces a documentos como etiquetas */
+a.chip-enlace { display: inline-block; max-width: min(100%, 440px); padding: 4px 12px; border-radius: 999px; background: var(--morado-suave);
+                color: var(--morado); font-size: .88rem; font-weight: 600; text-decoration: none; overflow: hidden;
+                text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; transition: background .15s, color .15s; }
+a.chip-enlace:hover { background: var(--morado); color: #fff; }
+a.chip-enlace .ico { width: 15px; height: 15px; margin-right: 6px; vertical-align: -2px; }
+
+/* Detalles desplegables */
+details summary { cursor: pointer; font-weight: 600; color: var(--morado); list-style: none; display: flex; align-items: center; gap: 8px; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: ""; width: 7px; height: 7px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+                          transform: rotate(-45deg); transition: transform .2s; margin-right: 4px; }
+details[open] summary::before { transform: rotate(45deg); }
 
 /* ---------- Insignias de estado ---------- */
 .insignia { display: inline-block; padding: 2px 11px; border-radius: 999px; font-size: .8rem; font-weight: 600;
@@ -179,27 +235,46 @@ a.dato { display: block; padding: 18px 20px; border-radius: var(--radio); backgr
          text-decoration: none; color: var(--tinta); animation: subir .4s ease both;
          transition: transform .18s, box-shadow .18s; }
 a.dato:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(15, 59, 36, .14); color: var(--tinta); }
+a.dato { position: relative; }
+a.dato .ico { position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; color: var(--lima); opacity: .9; }
+a.dato.morado .ico { color: var(--morado); }
+a.dato.verde .ico { color: var(--verde-600); }
 a.dato.morado { border-top-color: var(--morado); }
 a.dato.verde { border-top-color: var(--verde-600); }
 a.dato .num { display: block; font-size: 2.2rem; font-weight: 800; line-height: 1.1; color: var(--verde-800); }
 a.dato.morado .num { color: var(--morado); }
 a.dato .rot { color: var(--gris); font-size: .9rem; }
 
-/* ---------- Indicador de las 6 fases (estudiante) ---------- */
-ol.pasos { display: flex; list-style: none; margin: 8px 0 22px; padding: 0; }
-ol.pasos li { flex: 1; position: relative; text-align: center; padding: 0 4px; font-size: .8rem; color: var(--gris); }
-ol.pasos li::before { content: ""; position: absolute; top: 17px; left: -50%; width: 100%; height: 3px;
-                      background: var(--borde); z-index: 0; }
-ol.pasos li:first-child::before { display: none; }
-ol.pasos .punto { position: relative; z-index: 1; width: 36px; height: 36px; margin: 0 auto 8px; border-radius: 50%;
-                  display: grid; place-items: center; font-weight: 700; background: #fff;
-                  border: 3px solid var(--borde); color: var(--gris); transition: all .3s; }
-ol.pasos li.hecho::before, ol.pasos li.actual::before { background: var(--verde-600); }
-ol.pasos li.hecho .punto { background: var(--verde-600); border-color: var(--verde-600); color: #fff; }
-ol.pasos li.actual .punto { background: var(--lima); border-color: var(--verde-700); color: var(--verde-900);
-                            animation: pulso 2s ease-in-out infinite; }
-ol.pasos li.actual { color: var(--verde-900); font-weight: 700; }
-ol.pasos li.hecho { color: var(--verde-700); }
+/* ---------- Las 6 fases como tarjetas (estudiante) ---------- */
+.fases { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 8px 0 22px; }
+.fase-tarjeta { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px;
+                text-align: center; padding: 20px 14px 18px; border-radius: var(--radio); background: #fff;
+                border: 1px solid var(--borde); color: var(--gris); font-size: .85rem;
+                transition: transform .18s, box-shadow .18s; }
+.fase-tarjeta strong { color: var(--tinta); font-size: .95rem; }
+.fase-tarjeta .ico-grande { width: 34px; height: 34px; color: #9aa39d; margin-bottom: 4px; }
+.fase-tarjeta.hecha { background: var(--lima); border-color: var(--lima); color: var(--verde-900); }
+.fase-tarjeta.hecha strong { color: var(--verde-900); }
+.fase-tarjeta.hecha .ico-grande { color: #fff; }
+.fase-tarjeta.actual { background: var(--lima-suave); border: 2px solid var(--verde-700); color: var(--verde-900);
+                       animation: pulso 2s ease-in-out infinite; }
+.fase-tarjeta.actual .ico-grande { color: var(--verde-700); }
+.fase-tarjeta:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(15, 59, 36, .14); }
+a.ojo { display: inline-flex; margin-top: 8px; padding: 6px 12px; border-radius: 8px; background: rgba(15, 59, 36, .65);
+        color: #fff; transition: background .15s; }
+a.ojo:hover { background: var(--verde-900); color: #fff; }
+a.ojo .ico { width: 16px; height: 16px; }
+
+/* ---------- Enlaces de la universidad ---------- */
+.enlaces { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+a.enlace-tarjeta { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+                   padding: 26px 16px 20px; border-radius: var(--radio); background: #fff; border: 1px solid var(--borde);
+                   border-top: 4px solid var(--lima); box-shadow: var(--sombra); color: var(--tinta); text-decoration: none;
+                   animation: subir .4s ease both; transition: transform .18s, box-shadow .18s; }
+a.enlace-tarjeta:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(15, 59, 36, .14); color: var(--tinta); }
+a.enlace-tarjeta .ico-grande { width: 38px; height: 38px; color: var(--verde-700); }
+a.enlace-tarjeta .abrir { display: inline-flex; align-items: center; gap: 6px; color: var(--morado); font-size: .88rem; font-weight: 600; }
+a.enlace-tarjeta .abrir .ico { width: 15px; height: 15px; }
 
 /* ---------- Acceso (login y elegir rol) ---------- */
 .pagina-login { min-height: 100vh; display: grid; place-items: center; padding: 20px;
@@ -239,10 +314,6 @@ ol.pasos li.hecho { color: var(--verde-700); }
   .contenido { padding: 18px 14px 40px; }
   .tarjeta { padding: 18px 16px; }
   section.tarjeta table th { width: 130px; }
-  ol.pasos { flex-direction: column; gap: 6px; }
-  ol.pasos li { display: flex; align-items: center; gap: 12px; text-align: left; }
-  ol.pasos li::before { display: none; }
-  ol.pasos .punto { margin: 0; }
   .acceso { grid-template-columns: 1fr; }
   .acceso-panel { padding: 24px; }
   .acceso-panel img { width: 100px; }

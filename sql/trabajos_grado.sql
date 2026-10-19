@@ -1,5 +1,5 @@
 -- ============================================================
--- trabajos_grado.sql  (v0.8)
+-- trabajos_grado.sql  (v0.9)
 -- Motor: MySQL 8.0  |  Se ejecuta desde MySQL Workbench
 -- ATENCION: borra y recrea la base de datos trabajos_grado.
 -- ============================================================
@@ -60,6 +60,8 @@ CREATE TABLE proyecto (
   estado ENUM('En revisión','Aprobado','Rechazado','Aplazado') NOT NULL DEFAULT 'En revisión',
   fecha_limite DATE NULL,
   papeles_solicitados BOOLEAN NOT NULL DEFAULT FALSE,
+  sustentacion_fecha DATETIME NULL,            -- fase 6: la programa el coordinador
+  sustentacion_lugar VARCHAR(120) NULL,
   creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (id_idea) REFERENCES idea (id_idea),
   FOREIGN KEY (id_director) REFERENCES usuario (id_usuario),
@@ -82,7 +84,7 @@ CREATE TABLE integrante (
 CREATE TABLE documento (
   id_documento INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   id_proyecto INT UNSIGNED NOT NULL,
-  tipo ENUM('Recibo de pago','Anteproyecto','Otro') NOT NULL,
+  tipo ENUM('Recibo de pago','Anteproyecto','Informe','Otro') NOT NULL,   -- Informe: fases 4 y 5
   version INT UNSIGNED NOT NULL DEFAULT 1,
   url VARCHAR(500) NOT NULL,
   fase TINYINT UNSIGNED NOT NULL,
@@ -113,7 +115,7 @@ CREATE TABLE recordatorio (
   id_recordatorio INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
   id_usuario INT UNSIGNED NOT NULL,
   id_proyecto INT UNSIGNED NULL,
-  tipo ENUM('Fecha límite','Sin revisar') NOT NULL,
+  tipo ENUM('Fecha límite','Sin revisar','Sustentación') NOT NULL,
   mensaje VARCHAR(200) NOT NULL,
   fecha_limite DATE NULL,
   vigente BOOLEAN NOT NULL DEFAULT TRUE,
@@ -153,4 +155,7 @@ WHERE u.usuario = 'admin' AND r.nombre = 'Administrador';
 INSERT INTO enlace (nombre, url) VALUES
   ('Calendario académico', 'https://www.uts.edu.co/calendario-academico/'),
   ('Formatos de grado', 'https://www.dropbox.com/scl/fo/pudgcaq639agy7t06ahjs/AN084HnuyHffgYL5i--v_Ks/DOCUMENTOS%20DE%20GRADO?rlkey=6s0b9ajweteyx2ang7ywvk6xm&subfolder_nav_tracking=1&e=1&dl=0'),
-  ('Reglamento de trabajos de grado', 'https://www.uts.edu.co/sitio/wp-content/uploads/normatividad/acuerdos/acu-73.pdf');
+  ('Reglamento de trabajos de grado', 'https://www.uts.edu.co/sitio/wp-content/uploads/normatividad/acuerdos/acu-73.pdf'),
+  ('Base documental', 'https://www.dropbox.com/scl/fo/pudgcaq639agy7t06ahjs/AF-dMByc71OWsxcfY2dLe3A?rlkey=6s0b9ajweteyx2ang7ywvk6xm&dl=0'),
+  ('Valores pecuniarios', 'https://www.uts.edu.co/valores-pecuniarios/'),
+  ('Reglamento estudiantil', 'https://www.uts.edu.co/sitio/wp-content/uploads/2019/10/REGLAMENTO_ESTUDIANTIL_ENERO_2022-2.pdf');

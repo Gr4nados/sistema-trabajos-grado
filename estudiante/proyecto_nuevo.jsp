@@ -105,7 +105,8 @@
   <h1>Nuevo proyecto</h1>
   <c:choose>
     <c:when test="${yaTiene}">
-      <p class="suave">Ya tienes un proyecto en curso. Puedes seguirlo desde tu <a href="inicio.jsp">inicio</a>.</p>
+      <p class="suave">Ya tienes un proyecto en curso. Puedes seguirlo desde tu inicio.</p>
+      <a class="boton" href="inicio.jsp">Ir a mi inicio</a>
     </c:when>
     <c:otherwise>
       <c:if test="${not empty error}"><p class="error"><c:out value="${error}" /></p></c:if>

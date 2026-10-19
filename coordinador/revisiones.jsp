@@ -8,15 +8,16 @@
 <%@ include file="/includes/seguridad.jsp" %>
 <%@ include file="/includes/conexion.jsp" %>
 <%--
-  RF-12 (fases 3 y 5): despues del evaluador, el coordinador acepta o rechaza el proyecto.
-  Un proyecto espera aqui cuando esta en la fase 3 o 5 con estado "Aprobado" (aprobado por el
-  evaluador). Aceptar avanza la fase (la 5 pasa a la 6 = proceso finalizado). Rechazar deja el
-  proyecto en la misma fase para que el estudiante corrija. La decision queda en revision.
+  RF-12 (fase 5, Informe II): despues del evaluador, el coordinador da la aprobacion final.
+  Un proyecto espera aqui cuando esta en la fase 5 con estado "Aprobado" (aprobado por el
+  evaluador). Aceptar lo pasa a la fase 6 (fase final: se programa la sustentacion). Rechazar deja
+  el proyecto en la fase 5 para que el estudiante corrija. La decision queda en revision.
+  (La fase 3 ya no pasa por el coordinador: la decide solo el evaluador.)
 --%>
 <c:if test="${pageContext.request.method == 'POST'}">
   <sql:query var="objetivo" dataSource="${bd}">
     SELECT id_proyecto, fase FROM proyecto
-    WHERE id_proyecto = ? AND fase IN (3, 5) AND estado = 'Aprobado'
+    WHERE id_proyecto = ? AND fase = 5 AND estado = 'Aprobado'
     <sql:param value="${param.id}" />
   </sql:query>
   <c:set var="motivo" value="${fn:trim(param.motivo)}" />
@@ -94,18 +95,33 @@
             AND r.rol_revisor = 'Evaluador' AND r.fase = p.fase ORDER BY r.id_revision DESC LIMIT 1) AS comentario_evaluador
   FROM proyecto p
   LEFT JOIN idea a ON a.id_idea = p.id_idea
-  LEFT JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = IF(p.fase = 3, 'Anteproyecto', 'Otro')
+  LEFT JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = 'Informe'
    AND d.version = (SELECT MAX(d2.version) FROM documento d2 WHERE d2.id_proyecto = p.id_proyecto AND d2.tipo = d.tipo)
-  WHERE p.fase IN (3, 5) AND p.estado = 'Aprobado'
+  WHERE p.fase = 5 AND p.estado = 'Aprobado'
   ORDER BY p.id_proyecto
+</sql:query>
+
+<%-- Informes en curso (fases 4 y 5): el coordinador los puede ver mientras avanzan (solo lectura) --%>
+<sql:query var="enCurso" dataSource="${bd}">
+  SELECT p.id_proyecto, p.radicado, p.fase, p.estado, a.titulo,
+         (SELECT GROUP_CONCAT(CONCAT(u.nombres, ' ', u.apellidos) SEPARATOR ', ')
+            FROM integrante i JOIN usuario u ON u.id_usuario = i.id_usuario
+           WHERE i.id_proyecto = p.id_proyecto) AS estudiantes,
+         d.version, d.url
+  FROM proyecto p
+  LEFT JOIN idea a ON a.id_idea = p.id_idea
+  JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = 'Informe'
+   AND d.version = (SELECT MAX(d2.version) FROM documento d2 WHERE d2.id_proyecto = p.id_proyecto AND d2.tipo = 'Informe')
+  WHERE p.fase IN (4, 5) AND NOT (p.fase = 5 AND p.estado = 'Aprobado')
+  ORDER BY p.fase, p.id_proyecto
 </sql:query>
 
 <c:set var="titulo" value="Revisiones" />
 <%@ include file="/includes/cabecera.jsp" %>
 
 <section class="tarjeta">
-  <h1>Revisiones pendientes (fases 3 y 5)</h1>
-  <p class="suave">Proyectos aprobados por el evaluador que esperan tu aceptación.</p>
+  <h1>Aprobación final (fase 5)</h1>
+  <p class="suave">Informes aprobados por el evaluador que esperan tu aprobación final.</p>
   <c:if test="${not empty error}"><p class="error"><c:out value="${error}" /></p></c:if>
   <c:if test="${pendientes.rowCount == 0}"><p class="suave">No hay proyectos pendientes de aceptación.</p></c:if>
 </section>
@@ -118,7 +134,7 @@
       <tr><th>Fase</th><td><c:out value="${f.fase}" /> de 6</td></tr>
       <tr><th>Documento</th>
           <td>Versión <c:out value="${f.version}" /> ·
-              <a href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><c:out value="${f.url}" /></a></td></tr>
+              <a class="chip-enlace" href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${f.url}" /></a></td></tr>
       <tr><th>Calificación del director</th><td><c:out value="${empty f.nota_director ? '-' : f.nota_director}" /></td></tr>
       <tr><th>Calificación del evaluador</th>
           <td><c:out value="${empty f.nota_evaluador ? '-' : f.nota_evaluador}" />
@@ -133,5 +149,31 @@
     </form>
   </section>
 </c:forEach>
+
+<section class="tarjeta">
+  <h2>Informes en curso (fases 4 y 5)</h2>
+  <p class="suave">Solo lectura: el informe lo decide primero el director (fase 4) y luego el evaluador (fase 5).</p>
+  <c:choose>
+    <c:when test="${enCurso.rowCount == 0}"><p class="suave">No hay informes en curso.</p></c:when>
+    <c:otherwise>
+      <table>
+        <thead><tr><th>#</th><th>Radicado</th><th>Idea</th><th>Estudiante(s)</th><th>Fase</th><th>Estado</th><th>Informe</th></tr></thead>
+        <tbody>
+          <c:forEach var="f" items="${enCurso.rows}">
+            <tr>
+              <td><c:out value="${f.id_proyecto}" /></td>
+              <td><c:out value="${empty f.radicado ? '-' : f.radicado}" /></td>
+              <td><c:out value="${empty f.titulo ? 'Sin idea' : f.titulo}" /></td>
+              <td><c:out value="${f.estudiantes}" /></td>
+              <td><c:out value="${f.fase}" /></td>
+              <td><c:set var="valorInsignia" value="${f.estado}" /><%@ include file="/includes/insignia.jsp" %></td>
+              <td>v<c:out value="${f.version}" /> · <a class="chip-enlace" href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg>Abrir</a></td>
+            </tr>
+          </c:forEach>
+        </tbody>
+      </table>
+    </c:otherwise>
+  </c:choose>
+</section>
 
 <%@ include file="/includes/pie.jsp" %>

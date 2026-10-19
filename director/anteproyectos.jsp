@@ -19,7 +19,7 @@
     SELECT p.id_proyecto, p.fase, p.id_evaluador FROM proyecto p
     WHERE p.id_proyecto = ? AND p.id_director = ? AND p.fase IN (2, 4) AND p.estado = 'En revisión'
       AND EXISTS (SELECT 1 FROM documento d WHERE d.id_proyecto = p.id_proyecto
-                   AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Otro'))
+                   AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Informe'))
     <sql:param value="${param.id}" />
     <sql:param value="${sessionScope.idUsuario}" />
   </sql:query>
@@ -103,7 +103,7 @@
          d.version, d.url, d.subido_en
   FROM proyecto p
   LEFT JOIN idea a ON a.id_idea = p.id_idea
-  JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Otro')
+  JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Informe')
    AND d.version = (SELECT MAX(d2.version) FROM documento d2 WHERE d2.id_proyecto = p.id_proyecto AND d2.tipo = d.tipo)
   WHERE p.id_director = ? AND p.fase IN (2, 4) AND p.estado = 'En revisión'
   ORDER BY p.id_proyecto
@@ -118,7 +118,7 @@
   WHERE p.id_director = ?
     AND NOT (p.fase IN (2, 4) AND p.estado = 'En revisión'
              AND EXISTS (SELECT 1 FROM documento d WHERE d.id_proyecto = p.id_proyecto
-                          AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Otro')))
+                          AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Informe')))
   ORDER BY p.id_proyecto
   <sql:param value="${sessionScope.idUsuario}" />
 </sql:query>
@@ -141,7 +141,7 @@
       <tr><th>Fase</th><td><c:out value="${f.fase}" /> de 6</td></tr>
       <tr><th>Documento</th>
           <td>Versión <c:out value="${f.version}" /> ·
-              <a href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><c:out value="${f.url}" /></a>
+              <a class="chip-enlace" href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${f.url}" /></a>
               <small class="suave">(<c:out value="${f.subido_en}" />)</small></td></tr>
     </table>
     <form method="post" action="anteproyectos.jsp" class="decision">

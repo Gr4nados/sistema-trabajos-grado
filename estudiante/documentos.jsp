@@ -9,8 +9,8 @@
 <%@ include file="/includes/conexion.jsp" %>
 <%--
   RF-11, RF-16, RF-18 (fases 2 a 5): el estudiante registra, ve, edita o elimina la URL de su
-  documento. Fases 2 y 3 usan el tipo "Anteproyecto"; fases 4 y 5 el tipo "Otro"
-  (PENDIENTES.md #1). Cada URL nueva es una version nueva; "editar" registra una version nueva.
+  documento. Fases 2 y 3 (Propuesta I y II) usan el tipo "Anteproyecto"; fases 4 y 5 (Informe I y II)
+  el tipo "Informe" (la investigacion a fondo). Cada URL nueva es una version nueva; "editar" registra una version nueva.
   - Fases 2 y 4: puede registrar mientras el director no haya aprobado.
   - Fases 3 y 5: solo corrige si el evaluador o el coordinador lo rechazaron o aplazaron.
   - Eliminar: solo el documento registrado en la fase actual y antes de que alguien lo revise.
@@ -24,8 +24,8 @@
   <sql:param value="${sessionScope.idUsuario}" />
 </sql:query>
 <c:set var="p" value="${proy.rowCount > 0 ? proy.rows[0] : null}" />
-<c:set var="tipoDoc" value="${proy.rowCount > 0 && p.fase >= 4 ? 'Otro' : 'Anteproyecto'}" />
-<c:set var="etiquetaDoc" value="${tipoDoc == 'Otro' ? 'documento' : 'anteproyecto (FC124)'}" />
+<c:set var="tipoDoc" value="${proy.rowCount > 0 && p.fase >= 4 ? 'Informe' : 'Anteproyecto'}" />
+<c:set var="etiquetaDoc" value="${tipoDoc == 'Informe' ? 'informe' : 'anteproyecto (FC124)'}" />
 <c:set var="enRango" value="${proy.rowCount > 0 && p.fase >= 2 && p.fase <= 5}" />
 <c:set var="hayDirector" value="${enRango && not empty p.id_director}" />
 <c:set var="puedeRegistrar" value="${hayDirector && (p.fase == 2 || p.fase == 4 || p.estado == 'Rechazado' || p.estado == 'Aplazado')}" />
@@ -141,14 +141,16 @@
   <h1>Documentos del proyecto</h1>
   <c:choose>
     <c:when test="${proy.rowCount == 0}">
-      <p class="suave">Primero debes <a href="proyecto_nuevo.jsp">crear tu proyecto</a>.</p>
+      <p class="suave">Primero debes crear tu proyecto.</p>
+      <a class="boton" href="proyecto_nuevo.jsp"><svg class="ico"><use href="#i-mas"/></svg>Crear mi proyecto</a>
     </c:when>
     <c:when test="${p.fase == 1}">
-      <p class="suave">Tu proyecto está en la fase 1. Primero completa la
-        <a href="asignar_idea.jsp">idea y el recibo de pago</a>.</p>
+      <p class="suave">Tu proyecto está en la fase 1. Primero completa la idea y el recibo de pago.</p>
+      <a class="boton" href="asignar_idea.jsp">Ir a idea y recibo</a>
     </c:when>
     <c:when test="${p.fase == 6}">
-      <p class="suave">Tu proceso finalizó. Puedes consultar el <a href="versiones.jsp">historial de versiones</a>.</p>
+      <p class="suave">Tu proceso finalizó. Puedes consultar el historial de versiones.</p>
+      <a class="boton" href="versiones.jsp">Ver historial de versiones</a>
     </c:when>
     <c:otherwise>
       <p>Fase <strong><c:out value="${p.fase}" /></strong> de 6 · Estado: <c:set var="valorInsignia" value="${p.estado}" /><%@ include file="/includes/insignia.jsp" %></p>
@@ -162,7 +164,7 @@
           <c:if test="${ultimo.rowCount > 0}">
             <table>
               <tr><th>Versión actual</th><td><c:out value="${u.version}" /></td></tr>
-              <tr><th>URL</th><td><a href="<c:out value='${u.url}' />" target="_blank" rel="noopener"><c:out value="${u.url}" /></a></td></tr>
+              <tr><th>URL</th><td><a class="chip-enlace" href="<c:out value='${u.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${u.url}" /></a></td></tr>
               <tr><th>Registrada</th><td><c:out value="${u.subido_en}" /></td></tr>
             </table>
           </c:if>
@@ -195,7 +197,8 @@
               <button type="submit" class="peligro">Eliminar documento</button>
             </form>
           </c:if>
-          <p><a href="versiones.jsp">Ver historial de versiones</a> · <a href="calificaciones.jsp">Ver calificaciones</a></p>
+          <div class="acciones-fila"><a class="boton pequeno contorno" href="versiones.jsp"><svg class="ico"><use href="#i-doc"/></svg>Historial de versiones</a>
+          <a class="boton pequeno contorno" href="calificaciones.jsp"><svg class="ico"><use href="#i-estrella"/></svg>Calificaciones</a></div>
         </c:otherwise>
       </c:choose>
     </c:otherwise>

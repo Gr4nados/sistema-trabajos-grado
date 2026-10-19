@@ -167,11 +167,11 @@
               <td><c:out value="${i.nivel}" /></td>
               <td><c:out value="${i.proponente}" /> (<c:out value="${i.tipo_proponente}" />)</td>
               <td class="acciones">
-                <a href="idea_editar.jsp?id=${i.id_idea}">Editar</a>
+                <a class="boton pequeno contorno" href="idea_editar.jsp?id=${i.id_idea}"><svg class="ico"><use href="#i-editar"/></svg>Editar</a>
                 <c:if test="${empty i.id_proyecto}">
                   <form method="post" action="banco_ideas.jsp" onsubmit="return confirm('¿Eliminar esta idea?');">
                     <input type="hidden" name="id" value="${i.id_idea}">
-                    <button type="submit" name="accion" value="eliminar" class="peligro">Eliminar</button>
+                    <button type="submit" name="accion" value="eliminar" class="peligro"><svg class="ico"><use href="#i-papelera"/></svg>Eliminar</button>
                   </form>
                 </c:if>
               </td>

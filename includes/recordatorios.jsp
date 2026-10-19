@@ -14,7 +14,7 @@
     <c:otherwise>
       <ul class="avisos">
         <c:forEach var="a" items="${avisos.rows}">
-          <li class="${a.tipo == 'Fecha límite' ? 'fecha' : ''}">
+          <li class="${a.tipo != 'Sin revisar' ? 'fecha' : ''}">
             <span class="etiqueta"><c:out value="${a.tipo}" /></span>
             <span><c:out value="${a.mensaje}" />
               <c:if test="${not empty a.fecha_limite}"> (hasta <c:out value="${a.fecha_limite}" />)</c:if></span>

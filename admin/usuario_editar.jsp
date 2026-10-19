@@ -178,7 +178,7 @@
     <input type="text" id="codigo" name="codigo" maxlength="20"
            value="<c:out value='${esPost ? param.codigo : u.codigo}' />">
 
-    <label class="opcion">
+    <label class="opcion interruptor">
       <input type="checkbox" name="activo" value="1"
              ${(esPost ? not empty param.activo : u.activo == 1) || propio ? 'checked' : ''} ${propio ? 'disabled' : ''}>
       Cuenta activa

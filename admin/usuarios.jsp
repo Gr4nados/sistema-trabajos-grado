@@ -31,7 +31,7 @@
 <section class="tarjeta">
   <div class="barra">
     <h1>Usuarios</h1>
-    <a class="boton" href="usuario_nuevo.jsp">Registrar usuario</a>
+    <a class="boton" href="usuario_nuevo.jsp"><svg class="ico"><use href="#i-mas"/></svg>Registrar usuario</a>
   </div>
 
   <form method="get" action="usuarios.jsp" class="filtros">
@@ -64,12 +64,12 @@
               <td><c:out value="${f.roles}" /></td>
               <td><c:set var="valorInsignia" value="${f.activo == 1 ? 'Activo' : 'Inactivo'}" /><%@ include file="/includes/insignia.jsp" %></td>
               <td class="acciones">
-                <a href="usuario_editar.jsp?id=${f.id_usuario}">Editar</a>
+                <a class="boton pequeno contorno" href="usuario_editar.jsp?id=${f.id_usuario}"><svg class="ico"><use href="#i-editar"/></svg>Editar</a>
                 <c:if test="${f.id_usuario != sessionScope.idUsuario}">
                   <form method="post" action="usuario_eliminar.jsp"
                         onsubmit="return confirm('¿Eliminar este usuario?');">
                     <input type="hidden" name="id" value="${f.id_usuario}">
-                    <button type="submit" class="peligro">Eliminar</button>
+                    <button type="submit" class="peligro"><svg class="ico"><use href="#i-papelera"/></svg>Eliminar</button>
                   </form>
                 </c:if>
               </td>

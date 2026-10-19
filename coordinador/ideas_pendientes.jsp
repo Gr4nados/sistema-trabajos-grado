@@ -130,7 +130,7 @@
       <tr><th>Modalidad de la idea</th><td><c:out value="${f.modalidad_idea}" /></td></tr>
       <tr><th>Descripción</th><td><c:out value="${f.objetivo_general}" /></td></tr>
       <tr><th>Recibo de pago</th>
-          <td><a href="<c:out value='${f.recibo}' />" target="_blank" rel="noopener"><c:out value="${f.recibo}" /></a></td></tr>
+          <td><a class="chip-enlace" href="<c:out value='${f.recibo}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${f.recibo}" /></a></td></tr>
     </table>
 
     <form method="post" action="ideas_pendientes.jsp" class="decision">

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <fmt:requestEncoding value="UTF-8" />
 <c:set var="rolRequerido" value="Estudiante" />
 <%@ include file="/includes/seguridad.jsp" %>
@@ -24,19 +25,26 @@
   <h2>Estado de tu proyecto</h2>
   <c:choose>
     <c:when test="${proy.rowCount == 0}">
-      <p class="suave">Aún no tienes un proyecto. <a href="proyecto_nuevo.jsp">Crear mi proyecto</a></p>
+      <p class="suave">Aún no tienes un proyecto.</p>
+      <a class="boton" href="proyecto_nuevo.jsp"><svg class="ico"><use href="#i-mas"/></svg>Crear mi proyecto</a>
     </c:when>
     <c:otherwise>
       <c:set var="p" value="${proy.rows[0]}" />
-      <%-- Indicador de las 6 fases; los nombres de 4 y 5 estan por definir (PENDIENTES.md #1) --%>
-      <ol class="pasos">
-        <c:forTokens var="nombreFase" items="Idea y recibo|Anteproyecto|Evaluación|Entrega 2|Evaluación 2|Finalizado" delims="|" varStatus="v">
-          <li class="${v.count < p.fase ? 'hecho' : (v.count == p.fase ? 'actual' : '')}">
-            <span class="punto"><c:choose><c:when test="${v.count < p.fase || p.fase == 6}">&#10003;</c:when><c:otherwise><c:out value="${v.count}" /></c:otherwise></c:choose></span>
-            <c:out value="${nombreFase}" />
-          </li>
+      <%-- Las 6 fases como tarjetas: nombre;descripcion;icono. Hechas = check; actual = resaltada. --%>
+      <div class="fases">
+        <c:forTokens var="item" items="Pago;El estudiante describe su idea y sube el pago;pago|Propuesta I;El estudiante envía la propuesta al director;doc|Propuesta II;El director envía la propuesta al evaluador;avion|Informe I;El estudiante envía el informe al director;doc|Informe II;El director envía el informe al evaluador y al coordinador;avion|Fase final;Estudiante(s), director y evaluador programan la sustentación;birrete" delims="|" varStatus="v">
+          <c:set var="parte" value="${fn:split(item, ';')}" />
+          <c:set var="hecha" value="${v.count < p.fase}" />
+          <div class="fase-tarjeta ${hecha ? 'hecha' : (v.count == p.fase ? 'actual' : '')}">
+            <svg class="ico-grande"><use href="#i-${hecha ? 'check' : (v.count == p.fase && v.count < 6 ? 'reloj' : parte[2])}"/></svg>
+            <strong>Fase <c:out value="${v.count}" />: <c:out value="${parte[0]}" /></strong>
+            <span><c:out value="${parte[1]}" /></span>
+            <c:if test="${v.count <= p.fase}">
+              <a class="ojo" href="${v.count == 1 ? 'asignar_idea.jsp' : (v.count == 6 ? 'calificaciones.jsp' : 'documentos.jsp')}" title="Ver"><svg class="ico"><use href="#i-ojo"/></svg></a>
+            </c:if>
+          </div>
         </c:forTokens>
-      </ol>
+      </div>
       <table>
         <c:if test="${not empty p.radicado}"><tr><th>Radicado</th><td><c:out value="${p.radicado}" /></td></tr></c:if>
         <tr><th>Modalidad</th><td><c:out value="${p.modalidad}" /></td></tr>
@@ -50,18 +58,20 @@
           </c:choose>
         </td></tr>
         <c:if test="${p.fase == 1 && empty p.idea_titulo}">
-          <tr><th>Siguiente paso</th><td><a href="asignar_idea.jsp">Escoger idea y registrar el recibo de pago</a></td></tr>
+          <tr><th>Siguiente paso</th><td><a class="boton pequeno" href="asignar_idea.jsp">Escoger idea y registrar el recibo de pago</a></td></tr>
         </c:if>
         <c:if test="${p.fase >= 2 && p.fase <= 5}">
           <tr><th>Siguiente paso</th><td>
             <c:choose>
               <c:when test="${empty p.director_nombres}">Esperar a que el coordinador asigne tu director</c:when>
               <c:when test="${p.estado == 'Rechazado' || p.estado == 'Aplazado'}">
-                Te devolvieron el documento: revisa las <a href="calificaciones.jsp">calificaciones</a> y
-                <a href="documentos.jsp">registra una nueva versión</a></c:when>
-              <c:when test="${p.estado == 'Aprobado'}">Esperar la aceptación del coordinador</c:when>
-              <c:when test="${p.fase == 2 || p.fase == 4}"><a href="documentos.jsp">Registrar o revisar la URL de tu documento</a></c:when>
-              <c:otherwise>Tu documento está en evaluación</c:otherwise>
+                Te devolvieron el documento.
+                <div class="acciones-fila"><a class="boton pequeno contorno" href="calificaciones.jsp">Ver calificaciones</a>
+                <a class="boton pequeno" href="documentos.jsp">Registrar nueva versión</a></div></c:when>
+              <c:when test="${p.estado == 'Aprobado'}">Esperar la aprobación final del coordinador</c:when>
+              <c:when test="${p.fase == 2}"><a class="boton pequeno" href="documentos.jsp">Registrar o revisar la URL de tu anteproyecto</a></c:when>
+              <c:when test="${p.fase == 4}"><a class="boton pequeno" href="documentos.jsp">Registrar o revisar la URL de tu informe</a></c:when>
+              <c:otherwise>Tu documento está en evaluación por el evaluador</c:otherwise>
             </c:choose>
           </td></tr>
         </c:if>
@@ -72,9 +82,15 @@
       <c:if test="${p.fase == 6}">
         <%-- RF-14: papeles de grado (la vista no trae esta columna; no incluye al evaluador) --%>
         <sql:query var="papeles" dataSource="${bd}">
-          SELECT papeles_solicitados FROM proyecto WHERE id_proyecto = ?
+          SELECT papeles_solicitados, sustentacion_fecha, sustentacion_lugar FROM proyecto WHERE id_proyecto = ?
           <sql:param value="${p.id_proyecto}" />
         </sql:query>
+        <p><svg class="ico"><use href="#i-calendario"/></svg> <strong>Sustentación:</strong>
+          <c:choose>
+            <c:when test="${empty papeles.rows[0].sustentacion_fecha}">por programar (el coordinador la definirá).</c:when>
+            <c:otherwise><fmt:formatDate value="${papeles.rows[0].sustentacion_fecha}" pattern="dd/MM/yyyy HH:mm" />
+              <c:if test="${not empty papeles.rows[0].sustentacion_lugar}"> · <c:out value="${papeles.rows[0].sustentacion_lugar}" /></c:if></c:otherwise>
+          </c:choose></p>
         <c:choose>
           <c:when test="${papeles.rows[0].papeles_solicitados}">
             <p class="exito">Ya solicitaste tus papeles de grado.</p>

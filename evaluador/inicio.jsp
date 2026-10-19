@@ -14,7 +14,7 @@
     (SELECT COUNT(*) FROM proyecto p
       WHERE p.id_evaluador = ? AND p.fase IN (3, 5) AND p.estado = 'En revisión') AS por_evaluar,
     (SELECT COUNT(*) FROM proyecto p
-      WHERE p.id_evaluador = ? AND p.fase IN (3, 5) AND p.estado = 'Aprobado') AS espera_coordinador,
+      WHERE p.id_evaluador = ? AND p.fase = 5 AND p.estado = 'Aprobado') AS espera_coordinador,
     (SELECT COUNT(*) FROM proyecto WHERE id_evaluador = ?) AS a_cargo
   <sql:param value="${sessionScope.idUsuario}" />
   <sql:param value="${sessionScope.idUsuario}" />
@@ -28,9 +28,9 @@
 </section>
 
 <div class="tablero">
-  <a class="dato" href="anteproyectos.jsp"><span class="num"><c:out value="${d.por_evaluar}" /></span><span class="rot">Documentos por evaluar</span></a>
-  <a class="dato morado" href="anteproyectos.jsp"><span class="num"><c:out value="${d.espera_coordinador}" /></span><span class="rot">Aprobados, esperan al coordinador</span></a>
-  <a class="dato verde" href="anteproyectos.jsp"><span class="num"><c:out value="${d.a_cargo}" /></span><span class="rot">Proyectos a mi cargo</span></a>
+  <a class="dato" href="anteproyectos.jsp"><svg class="ico"><use href="#i-doc"/></svg><span class="num"><c:out value="${d.por_evaluar}" /></span><span class="rot">Documentos por evaluar</span></a>
+  <a class="dato morado" href="anteproyectos.jsp"><svg class="ico"><use href="#i-reloj"/></svg><span class="num"><c:out value="${d.espera_coordinador}" /></span><span class="rot">Aprobados, esperan al coordinador</span></a>
+  <a class="dato verde" href="anteproyectos.jsp"><svg class="ico"><use href="#i-proyecto"/></svg><span class="num"><c:out value="${d.a_cargo}" /></span><span class="rot">Proyectos a mi cargo</span></a>
 </div>
 
 <%@ include file="/includes/recordatorios.jsp" %>

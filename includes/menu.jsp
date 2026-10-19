@@ -6,7 +6,6 @@
 --%>
 <c:set var="raiz" value="${pageContext.request.contextPath}" />
 <c:set var="ruta" value="${pageContext.request.servletPath}" />
-<sql:query var="enlaces" dataSource="${bd}">SELECT nombre, url FROM enlace ORDER BY id_enlace</sql:query>
 
 <a class="marca" href="${raiz}/index.jsp">
   <span class="marca-logo">TG</span>
@@ -37,7 +36,8 @@
       <a href="${raiz}/coordinador/banco_ideas.jsp" class="${ruta == '/coordinador/banco_ideas.jsp' || ruta == '/coordinador/idea_editar.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-ideas"/></svg><span>Banco de ideas</span></a>
       <a href="${raiz}/coordinador/ideas_pendientes.jsp" class="${ruta == '/coordinador/ideas_pendientes.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-proyecto"/></svg><span>Ideas por asignar</span></a>
       <a href="${raiz}/coordinador/asignar_director.jsp" class="${ruta == '/coordinador/asignar_director.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-asignar"/></svg><span>Asignar director</span></a>
-      <a href="${raiz}/coordinador/revisiones.jsp" class="${ruta == '/coordinador/revisiones.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-revisar"/></svg><span>Revisiones</span></a>
+      <a href="${raiz}/coordinador/revisiones.jsp" class="${ruta == '/coordinador/revisiones.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-revisar"/></svg><span>Aprobación final</span></a>
+      <a href="${raiz}/coordinador/sustentaciones.jsp" class="${ruta == '/coordinador/sustentaciones.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-birrete"/></svg><span>Sustentaciones</span></a>
       <p class="grupo">Consulta</p>
       <a href="${raiz}/coordinador/buscar.jsp" class="${ruta == '/coordinador/buscar.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-buscar"/></svg><span>Buscar estudiante</span></a>
       <a href="${raiz}/coordinador/informes.jsp" class="${ruta == '/coordinador/informes.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-informe"/></svg><span>Informes</span></a>
@@ -61,9 +61,7 @@
   <a href="${raiz}/perfil.jsp" class="${ruta == '/perfil.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-persona"/></svg><span>Mi perfil</span></a>
 
   <p class="grupo">Universidad</p>
-  <c:forEach var="e" items="${enlaces.rows}">
-    <a href="<c:out value='${e.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><span><c:out value="${e.nombre}" /></span></a>
-  </c:forEach>
+  <a href="${raiz}/enlaces.jsp" class="${ruta == '/enlaces.jsp' ? 'activo' : ''}"><svg class="ico"><use href="#i-externo"/></svg><span>Enlaces de la universidad</span></a>
 </nav>
 
 <div class="usuario">

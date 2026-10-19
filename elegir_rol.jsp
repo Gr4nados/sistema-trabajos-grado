@@ -20,7 +20,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Elegir rol - Trabajos de Grado</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=0.9.3">
 </head>
 <body class="pagina-login">
   <div class="acceso">
@@ -35,7 +35,7 @@
       <c:forEach var="r" items="${sessionScope.rolesUsuario.rows}">
         <button type="submit" name="rol" value="${r.nombre}"><c:out value="${r.nombre}" /></button>
       </c:forEach>
-      <a href="logout.jsp">Cancelar</a>
+      <a class="boton secundario" href="logout.jsp">Cancelar</a>
     </form>
   </div>
 </body>

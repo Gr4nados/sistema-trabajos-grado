@@ -26,7 +26,7 @@
   <c:forEach var="r" items="${porRol.rows}" varStatus="v">
     <a class="dato ${v.index % 3 == 1 ? 'morado' : (v.index % 3 == 2 ? 'verde' : '')}"
        href="usuarios.jsp?rol=<c:out value='${r.nombre}' />">
-      <span class="num"><c:out value="${r.n}" /></span><span class="rot"><c:out value="${r.nombre}" /></span>
+      <svg class="ico"><use href="#i-usuarios"/></svg><span class="num"><c:out value="${r.n}" /></span><span class="rot"><c:out value="${r.nombre}" /></span>
     </a>
   </c:forEach>
 </div>

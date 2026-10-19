@@ -32,7 +32,7 @@
               <td><c:out value="${d.tipo}" /></td>
               <td><c:out value="${d.version}" /></td>
               <td><c:out value="${d.fase}" /></td>
-              <td><a href="<c:out value='${d.url}' />" target="_blank" rel="noopener"><c:out value="${d.url}" /></a></td>
+              <td><a class="chip-enlace" href="<c:out value='${d.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${d.url}" /></a></td>
               <td><c:out value="${d.autor}" /></td>
               <td><c:out value="${d.subido_en}" /></td>
             </tr>
@@ -41,7 +41,7 @@
       </table>
     </c:otherwise>
   </c:choose>
-  <p><a href="documentos.jsp">Volver a documentos</a></p>
+  <a class="boton contorno" href="documentos.jsp"><svg class="ico"><use href="#i-atras"/></svg>Volver a documentos</a>
 </section>
 
 <%@ include file="/includes/pie.jsp" %>

@@ -19,7 +19,7 @@
 <section class="tarjeta">
   <div class="barra">
     <h1>Mis ideas publicadas</h1>
-    <a class="boton" href="idea_nueva.jsp">Publicar idea</a>
+    <a class="boton" href="idea_nueva.jsp"><svg class="ico"><use href="#i-mas"/></svg>Publicar idea</a>
   </div>
   <c:choose>
     <c:when test="${ideas.rowCount == 0}"><p class="suave">Aún no has publicado ideas.</p></c:when>

@@ -10,7 +10,9 @@
 <%--
   RF-22, RF-23 (fases 3 y 5): el evaluador ve solo lo que el director ya aprobo (el proyecto esta
   en la fase 3 o 5), abre la URL, califica y aprueba, rechaza o aplaza.
-  - Aprobar: estado "Aprobado" en la misma fase = a la espera de la aceptacion del coordinador.
+  - Fase 3 (Propuesta II): aprobar hace avanzar el proyecto a la fase 4; decide solo el evaluador.
+  - Fase 5 (Informe II): aprobar deja estado "Aprobado" en la misma fase = a la espera de la
+    aceptacion final del coordinador.
   - Rechazar / aplazar: el estudiante corrige (documentos.jsp) y el estado vuelve a "En revisión".
 --%>
 <c:if test="${pageContext.request.method == 'POST'}">
@@ -35,6 +37,7 @@
       <c:set var="idProyecto" value="${objetivo.rows[0].id_proyecto}" />
       <c:set var="faseActual" value="${objetivo.rows[0].fase}" />
       <c:set var="aprobar" value="${resultado == 'Aprobado'}" />
+      <c:set var="avanza" value="${aprobar && faseActual == 3}" />
       <c:catch var="fallo">
         <sql:transaction dataSource="${bd}">
           <sql:update>
@@ -48,15 +51,16 @@
             <sql:param value="${comentario}" />
           </sql:update>
           <sql:update>
-            UPDATE proyecto SET estado = ? WHERE id_proyecto = ?
-            <sql:param value="${resultado}" />
+            UPDATE proyecto SET fase = fase + ?, estado = ? WHERE id_proyecto = ?
+            <sql:param value="${avanza ? 1 : 0}" />
+            <sql:param value="${avanza ? 'En revisión' : resultado}" />
             <sql:param value="${idProyecto}" />
           </sql:update>
           <sql:update>
             UPDATE recordatorio SET vigente = FALSE WHERE id_proyecto = ? AND tipo = 'Sin revisar'
             <sql:param value="${idProyecto}" />
           </sql:update>
-          <c:if test="${aprobar}">
+          <c:if test="${aprobar && faseActual == 5}">
             <sql:update>
               INSERT INTO recordatorio (id_usuario, id_proyecto, tipo, mensaje)
               SELECT ur.id_usuario, ?, 'Sin revisar', CONCAT('Proyecto ', ?, ' aprobado por el evaluador: pendiente de aceptación')
@@ -70,6 +74,7 @@
       <c:choose>
         <c:when test="${empty fallo}">
           <c:set var="mensaje" value="Decisión registrada: ${resultado}." scope="session" />
+          <c:if test="${avanza}"><c:set var="mensaje" value="Propuesta aprobada: el proyecto avanzó a la fase 4." scope="session" /></c:if>
           <c:redirect url="/evaluador/anteproyectos.jsp" />
         </c:when>
         <c:otherwise>
@@ -95,7 +100,7 @@
            ORDER BY r.id_revision DESC LIMIT 1) AS comentario_director
   FROM proyecto p
   LEFT JOIN idea a ON a.id_idea = p.id_idea
-  JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = IF(p.fase = 3, 'Anteproyecto', 'Otro')
+  JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = IF(p.fase = 3, 'Anteproyecto', 'Informe')
    AND d.version = (SELECT MAX(d2.version) FROM documento d2 WHERE d2.id_proyecto = p.id_proyecto AND d2.tipo = d.tipo)
   WHERE p.id_evaluador = ? AND p.fase IN (3, 5) AND p.estado = 'En revisión'
   ORDER BY p.id_proyecto
@@ -113,8 +118,8 @@
 <%@ include file="/includes/cabecera.jsp" %>
 
 <section class="tarjeta">
-  <h1>Anteproyectos por evaluar</h1>
-  <p class="suave">Solo aparecen los documentos que el director ya aprobó.</p>
+  <h1>Documentos por evaluar</h1>
+  <p class="suave">Solo aparecen los documentos que el director ya aprobó: la propuesta (fase 3) y el informe (fase 5).</p>
   <c:if test="${not empty error}"><p class="error"><c:out value="${error}" /></p></c:if>
   <c:if test="${pendientes.rowCount == 0}"><p class="suave">No tienes documentos pendientes de evaluación.</p></c:if>
 </section>
@@ -128,7 +133,7 @@
       <tr><th>Fase</th><td><c:out value="${f.fase}" /> de 6</td></tr>
       <tr><th>Documento</th>
           <td>Versión <c:out value="${f.version}" /> ·
-              <a href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><c:out value="${f.url}" /></a>
+              <a class="chip-enlace" href="<c:out value='${f.url}' />" target="_blank" rel="noopener"><svg class="ico"><use href="#i-externo"/></svg><c:out value="${f.url}" /></a>
               <small class="suave">(<c:out value="${f.subido_en}" />)</small></td></tr>
       <tr><th>Calificación del director</th>
           <td><c:out value="${empty f.nota_director ? '-' : f.nota_director}" />
@@ -161,7 +166,7 @@
               <td><c:out value="${o.id_proyecto}" /></td>
               <td><c:out value="${empty o.titulo ? 'Sin idea' : o.titulo}" /></td>
               <td><c:out value="${o.fase}" /></td>
-              <td><c:set var="valorInsignia" value="${o.estado}" /><%@ include file="/includes/insignia.jsp" %><c:if test="${o.estado == 'Aprobado' && (o.fase == 3 || o.fase == 5)}"> <small class="suave">espera al coordinador</small></c:if></td>
+              <td><c:set var="valorInsignia" value="${o.estado}" /><%@ include file="/includes/insignia.jsp" %><c:if test="${o.estado == 'Aprobado' && o.fase == 5}"> <small class="suave">espera al coordinador</small></c:if></td>
             </tr>
           </c:forEach>
         </tbody>
