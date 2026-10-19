@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.9 - Continuidad de las fases
+- Fases con sus nombres: 1 Pago, 2 Propuesta I, 3 Propuesta II, 4 Informe I, 5 Informe II, 6 Fase final.
+- **Fase 3:** decide solo el evaluador; al aprobar, el proyecto avanza a la fase 4 (antes esperaba al coordinador).
+- **Fases 4 y 5:** el documento es el *informe* (tipo `Informe`, distinto del anteproyecto; también por URL y con versiones).
+- **Fase 5:** el evaluador aprueba y el coordinador da la aprobación final (`coordinador/revisiones.jsp`, ahora solo fase 5).
+- **Fase 6:** `coordinador/sustentaciones.jsp` programa fecha, hora y lugar; el estudiante, el director y el evaluador reciben un aviso.
+- Inicio del estudiante: las 6 fases como tarjetas con iconos (hecha = check, actual = reloj de arena) y enlace "ver".
+- Más iconos: nuevos símbolos y un icono en cada tarjeta de contadores.
+- `enlaces.jsp`: una sola página con todos los enlaces de la universidad (tarjetas con iconos); el menú lateral queda con
+  una opción "Enlaces de la universidad". Nuevos enlaces: Base documental, Valores pecuniarios y Reglamento estudiantil.
+- `coordinador/revisiones.jsp`: además de la aprobación final, el coordinador ve en solo lectura los informes de las fases 4 y 5.
+- Controles más modernos: las acciones que eran texto subrayado ahora son botones (con iconos de más, editar, papelera y volver); los filtros y "cuenta activa" son interruptores; las opciones (modalidad, trabajo individual o en pareja, roles) son etiquetas seleccionables; las listas desplegables tienen flecha propia; los enlaces a documentos son etiquetas con icono; los detalles desplegables llevan flecha.
+- Esquema: `documento.tipo` suma `Informe`, `proyecto.sustentacion_fecha` y `sustentacion_lugar`, y `recordatorio.tipo` suma
+  `Sustentación`. Una base existente se actualiza con `sql/migracion_v0.9.sql` (también pasa a la fase 4 los proyectos que
+  esperaban al coordinador en la fase 3).
+
 ## v0.8 - Ajustes de Ruta.md
 - Enlaces de la universidad: nuevo Calendario académico y Formatos de grado (Dropbox), y nuevo
   "Reglamento de trabajos de grado" (tabla `enlace`, mostrada en el menú).

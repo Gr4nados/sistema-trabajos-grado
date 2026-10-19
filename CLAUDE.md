@@ -9,7 +9,7 @@ Sistema de Trabajos de Grado: una webapp de JSP + JSTL que guía un proyecto de 
 No hay build, lint ni pruebas automáticas. La carpeta del repo **es** la webapp desplegada: Tomcat (XAMPP) la sirve desde `C:\xampp\tomcat\webapps\TrabajosGrado`, así que editar un `.jsp` y recargar basta (Tomcat recompila solo).
 
 - Iniciar Tomcat: `C:\xampp\catalina_start.bat`. URL: `http://localhost:8080/TrabajosGrado/login.jsp`. MySQL 8 debe estar en el puerto 3306.
-- Base de datos: ejecutar `sql/trabajos_grado.sql` (**borra y recrea** `trabajos_grado`). Una base creada con una versión anterior se actualiza **sin perder datos** con `sql/migracion_v0.8.sql` (una sola vez). Todo cambio de esquema se refleja en las dos. Administrador de arranque: `admin` / `admin123`.
+- Base de datos: ejecutar `sql/trabajos_grado.sql` (**borra y recrea** `trabajos_grado`). Una base creada con una versión anterior se actualiza **sin perder datos** con `sql/migracion_v0.8.sql` y luego `sql/migracion_v0.9.sql` (una sola vez cada una). Todo cambio de esquema se refleja en las dos. Administrador de arranque: `admin` / `admin123`.
 - El cliente `mysql.exe` de XAMPP no puede autenticarse contra este servidor (`caching_sha2_password`); usar `C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe`.
 - `includes/conexion.jsp` está en `.gitignore` (lleva la clave de MySQL). Si falta, copiar `includes/conexion.ejemplo.jsp` y poner la clave.
 - Verificación sin tocar datos: pedir la página con `curl` sin sesión. Un 302 hacia el login significa que **compiló**; un 500 es error de JSP. Las expresiones EL solo se evalúan con sesión (probar con `admin`). Validar SQL nuevo con `EXPLAIN`.
@@ -35,8 +35,11 @@ Los includes son estáticos (`<%@ include %>`): comparten taglibs y variables co
 
 **Máquina de estados del proyecto** (tabla `proyecto`: `fase` 1–6 y `estado`):
 - Fase 1: el estudiante elige idea + URL del recibo; el coordinador la asigna escribiendo el **radicado** (único, obligatorio; → fase 2) o la rechaza (se libera `id_idea`; sigue en fase 1).
-- Fases 2 y 4: el estudiante registra el documento (`Anteproyecto` en 2, `Otro` en 4); el director califica. Aprobar → fase+1.
-- Fases 3 y 5: el evaluador califica. **`estado = 'Aprobado'` dentro de la fase 3 o 5 significa "aprobado por el evaluador, espera al coordinador"**. El coordinador acepta (fase+1; la 5 pasa a la 6, estado `Aprobado`) o rechaza.
+- Nombres de fase: 1 Pago, 2 Propuesta I, 3 Propuesta II, 4 Informe I, 5 Informe II, 6 Fase final. *Anteproyecto* (justifica la idea) e *Informe* (la investigación a fondo) son documentos distintos, ambos por URL.
+- Fases 2 y 4: el estudiante registra el documento (`Anteproyecto` en 2, `Informe` en 4); el director califica. Aprobar → fase+1.
+- Fase 3: el evaluador califica; **al aprobar avanza a la fase 4** (el coordinador no interviene).
+- Fase 5: el evaluador califica y **`estado = 'Aprobado'` en la fase 5 significa "aprobado por el evaluador, espera la aprobación final del coordinador"**. El coordinador acepta (→ fase 6, estado `Aprobado`) o rechaza.
+- Fase 6: el coordinador programa la sustentación (`proyecto.sustentacion_fecha`/`sustentacion_lugar`, aviso tipo `Sustentación`); el estudiante puede solicitar sus papeles.
 - Un rechazo o aplazamiento **no cierra** el proyecto: conserva la fase, el estado queda `Rechazado`/`Aplazado` y el estudiante registra otra versión, que lo devuelve a `En revisión`.
 - Cada decisión se inserta en `revision` (RNF-08). Cada URL nueva en `documento` es una versión nueva (versión = MAX + 1 por proyecto y tipo; nunca se sobrescribe).
 - Los avisos (`recordatorio`, tipos `Sin revisar` y `Fecha límite`) se cierran (`vigente = FALSE`) y se crean en las mismas transacciones que cambian el estado.
@@ -53,6 +56,8 @@ Los includes son estáticos (`<%@ include %>`): comparten taglibs y variables co
 - Cambios de varias tablas dentro de `<sql:transaction>` envuelto en `<c:catch var="fallo">`.
 - En un `UPDATE` de MySQL las asignaciones se evalúan de izquierda a derecha: poner `estado = IF(fase + 1 = 6, ...)` **antes** de `fase = fase + 1`.
 - Borrar un usuario con registros asociados lo desactiva (`activo = FALSE`); la base no tiene `ON DELETE CASCADE`, así que borrar un proyecto exigiría eliminar a mano `recordatorio`, `revision`, `documento` e `integrante` (y devolver la idea a `Disponible`).
+- Los enlaces de la universidad viven en la tabla `enlace` y se muestran en `enlaces.jsp` (una opción del menú lateral); para agregar uno, insertarlo en esa tabla (y en `trabajos_grado.sql`).
+- Los enlaces a `css/estilo.css` y `js/app.js` llevan `?v=X.Y.Z` (en `cabecera.jsp`, `login.jsp` y `elegir_rol.jsp`) para que el navegador no use una copia vieja: **súbelo al cambiar el CSS o el JS**.
 - Estilos en `css/estilo.css` (variables de la paleta UTS: verde, lima, morado). Iconos: sprite SVG en `cabecera.jsp`.
 
 ## Documentación del proyecto

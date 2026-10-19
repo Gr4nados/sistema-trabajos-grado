@@ -9,16 +9,15 @@ Ocho pasos entre roles. Usa la base recién creada con `sql/trabajos_grado.sql`
 | 2 | Estudiante | En `proyecto_nuevo.jsp` crea el proyecto. En `idea_nueva.jsp` propone una idea (o usa una del banco) y en `asignar_idea.jsp` la elige con la URL del recibo. | Proyecto en fase 1; el coordinador recibe el recordatorio "Sin revisar". |
 | 3 | Coordinador | En `ideas_pendientes.jsp` asigna la idea escribiendo el radicado (si la idea es de un docente, antes debe aceptarla en `banco_ideas.jsp`). En `asignar_director.jsp` escoge director, evaluador y (opcional) fecha límite. | Proyecto en fase 2; el estudiante ve a su director y no ve al evaluador. |
 | 4 | Estudiante | En `documentos.jsp` registra la URL del anteproyecto. | Versión 1 en `versiones.jsp`; el director recibe un recordatorio. |
-| 5 | Director | En `anteproyectos.jsp` pone nota (0.0 a 5.0) y aprueba. | Proyecto pasa a la fase 3; el evaluador recibe un recordatorio. |
-| 6 | Evaluador | En `anteproyectos.jsp` ve el documento, pone nota y aprueba. | Estado "Aprobado" en la fase 3; el coordinador recibe un recordatorio. |
-| 7 | Estudiante | (Solo si hace falta) tras un rechazo o aplazamiento, registra una versión nueva en `documentos.jsp`. | Versión 2; el estado vuelve a "En revisión" y el revisor se entera por recordatorio. |
-| 8 | Coordinador | En `revisiones.jsp` acepta. | El proyecto avanza a la fase 4. |
+| 5 | Director | En `anteproyectos.jsp` pone nota (0.0 a 5.0) y aprueba. | Proyecto pasa a la fase 3 (Propuesta II); el evaluador recibe un recordatorio. |
+| 6 | Evaluador | En `anteproyectos.jsp` ve la propuesta, pone nota y aprueba. | El proyecto avanza a la fase 4 (Informe I). |
+| 7 | Estudiante | En `documentos.jsp` registra la URL del **informe**. (Si le rechazan o aplazan algo, registra una versión nueva.) El director lo califica y aprueba. | Versión en `versiones.jsp`; el proyecto pasa a la fase 5 (Informe II). |
+| 8 | Evaluador y coordinador | El evaluador aprueba el informe; el coordinador da la aprobación final en `revisiones.jsp`. | El proyecto avanza a la fase 6 (Fase final). |
 
-## Continuación (fases 4 a 6)
+## Continuación (fase 6)
 
-- Fase 4: el estudiante registra su documento (tipo "Otro") y el director decide, igual que en la fase 2.
-- Fase 5: igual que la fase 3 (evaluador y luego coordinador).
-- Fase 6: el estudiante ve "Solicitar papeles de grado"; al pulsarlo, el coordinador recibe el aviso.
+- El coordinador programa fecha, hora y lugar en `sustentaciones.jsp`; el estudiante, el director y el evaluador reciben el aviso.
+- El estudiante ve la sustentación en su inicio y el botón "Solicitar papeles de grado"; al pulsarlo, el coordinador recibe el aviso.
 
 ## Comprobaciones de seguridad
 

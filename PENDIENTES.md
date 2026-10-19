@@ -4,7 +4,7 @@ Los que bloqueen el flujo se detienen; los demás se resuelven con un supuesto y
 
 | # | Tema | Supuesto actual | Estado |
 |---|------|-----------------|--------|
-| 1 | Contenido de las fases 4 y 5 | Repiten el ciclo de las fases 2 y 3 (documento tipo "Otro") | Pendiente |
+| 1 | Contenido de las fases 4 y 5 | Definido en Ruta.md (v0.2): Informe I (estudiante → director) e Informe II (evaluador y coordinador); el informe es la investigación a fondo | Definido (revisar con el profesor) |
 | 2 | Quién decide la fase 1 | El coordinador asigna o rechaza la idea | Pendiente |
 | 3 | Quién asigna director y evaluador | El coordinador asigna ambos; el estudiante nunca ve al evaluador | Confirmado por el usuario |
 | 4 | Escala de la calificación | 0.0 a 5.0 | Pendiente |
@@ -30,3 +30,5 @@ Los que bloqueen el flujo se detienen; los demás se resuelven con un supuesto y
 | 24 | Aceptación de ideas de docentes | Las ideas de docentes quedan Pendiente hasta que el coordinador las acepte o rechace; las del estudiante entran directo al banco | Supuesto mío (interpreta Ruta.md, act. 4) |
 | 25 | Radicado | Texto libre (máx. 30), único, lo escribe el coordinador al asignar la idea de la fase 1 (formato por definir) | Supuesto mío (Ruta.md, act. 6) |
 | 26 | Eliminar ideas del banco | El coordinador puede eliminarlas salvo que estén ligadas a un proyecto | Supuesto mío (Ruta.md, act. 5) |
+| 27 | Quién programa la sustentación | El coordinador registra fecha, hora y lugar; el aviso llega a los estudiantes, el director y el evaluador | Confirmado por el usuario |
+| 28 | Fase 3 y el coordinador | La fase 3 la decide solo el evaluador; el coordinador interviene únicamente en la fase 5 | Supuesto mío (interpreta Ruta.md, fases 3 y 5) |
