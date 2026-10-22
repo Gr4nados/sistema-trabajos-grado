@@ -89,13 +89,13 @@
     </sql:query>
   </c:if>
   <sql:query var="ultimoRechazo" dataSource="${bd}">
-    SELECT comentario, revisada_en FROM revision
+    SELECT comentario, DATE_FORMAT(revisada_en, '%d/%m/%Y %H:%i') AS revisada_en FROM revision
     WHERE id_proyecto = ? AND fase = 1 AND resultado = 'Rechazado'
     ORDER BY id_revision DESC LIMIT 1
     <sql:param value="${p.id_proyecto}" />
   </sql:query>
   <sql:query var="recibos" dataSource="${bd}">
-    SELECT version, url, subido_en FROM documento
+    SELECT version, url, DATE_FORMAT(subido_en, '%d/%m/%Y %H:%i') AS subido_en FROM documento
     WHERE id_proyecto = ? AND tipo = 'Recibo de pago' ORDER BY version DESC
     <sql:param value="${p.id_proyecto}" />
   </sql:query>

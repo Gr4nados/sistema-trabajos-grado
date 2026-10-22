@@ -32,7 +32,7 @@
 
 <c:if test="${enRango}">
   <sql:query var="ultimo" dataSource="${bd}">
-    SELECT id_documento, version, url, fase, subido_en FROM documento
+    SELECT id_documento, version, url, fase, DATE_FORMAT(subido_en, '%d/%m/%Y %H:%i') AS subido_en FROM documento
     WHERE id_proyecto = ? AND tipo = ? ORDER BY version DESC LIMIT 1
     <sql:param value="${p.id_proyecto}" />
     <sql:param value="${tipoDoc}" />
@@ -191,13 +191,14 @@
             </c:otherwise>
           </c:choose>
 
+          <div class="acciones-fila">
           <c:if test="${puedeEliminar}">
             <form method="post" action="documentos.jsp" onsubmit="return confirm('¿Eliminar este documento?');">
               <input type="hidden" name="accion" value="eliminar">
-              <button type="submit" class="peligro">Eliminar documento</button>
+              <button type="submit" class="peligro"><svg class="ico"><use href="#i-papelera"/></svg>Eliminar documento</button>
             </form>
           </c:if>
-          <div class="acciones-fila"><a class="boton pequeno contorno" href="versiones.jsp"><svg class="ico"><use href="#i-doc"/></svg>Historial de versiones</a>
+          <a class="boton pequeno contorno" href="versiones.jsp"><svg class="ico"><use href="#i-doc"/></svg>Historial de versiones</a>
           <a class="boton pequeno contorno" href="calificaciones.jsp"><svg class="ico"><use href="#i-estrella"/></svg>Calificaciones</a></div>
         </c:otherwise>
       </c:choose>

@@ -82,13 +82,13 @@
       <c:if test="${p.fase == 6}">
         <%-- RF-14: papeles de grado (la vista no trae esta columna; no incluye al evaluador) --%>
         <sql:query var="papeles" dataSource="${bd}">
-          SELECT papeles_solicitados, sustentacion_fecha, sustentacion_lugar FROM proyecto WHERE id_proyecto = ?
+          SELECT papeles_solicitados, sustentacion_fecha, DATE_FORMAT(sustentacion_fecha, '%d/%m/%Y %H:%i') AS sustentacion_txt, sustentacion_lugar FROM proyecto WHERE id_proyecto = ?
           <sql:param value="${p.id_proyecto}" />
         </sql:query>
         <p><svg class="ico"><use href="#i-calendario"/></svg> <strong>Sustentación:</strong>
           <c:choose>
             <c:when test="${empty papeles.rows[0].sustentacion_fecha}">por programar (el coordinador la definirá).</c:when>
-            <c:otherwise><fmt:formatDate value="${papeles.rows[0].sustentacion_fecha}" pattern="dd/MM/yyyy HH:mm" />
+            <c:otherwise><c:out value="${papeles.rows[0].sustentacion_txt}" />
               <c:if test="${not empty papeles.rows[0].sustentacion_lugar}"> · <c:out value="${papeles.rows[0].sustentacion_lugar}" /></c:if></c:otherwise>
           </c:choose></p>
         <c:choose>

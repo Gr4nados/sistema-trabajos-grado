@@ -13,7 +13,7 @@
   <c:set var="patron" value="%${q}%" />
   <sql:query var="res" dataSource="${bd}">
     SELECT u.id_usuario, u.codigo, u.documento, u.nombres, u.apellidos,
-           p.id_proyecto, p.radicado, p.modalidad, p.fase, p.estado, p.fecha_limite, p.sustentacion_fecha, p.sustentacion_lugar, p.papeles_solicitados,
+           p.id_proyecto, p.radicado, p.modalidad, p.fase, p.estado, p.fecha_limite, p.sustentacion_fecha, DATE_FORMAT(p.sustentacion_fecha, '%d/%m/%Y %H:%i') AS sustentacion_txt, p.sustentacion_lugar, p.papeles_solicitados,
            a.titulo,
            CONCAT(d.nombres, ' ', d.apellidos) AS director,
            CONCAT(e.nombres, ' ', e.apellidos) AS evaluador
@@ -62,7 +62,7 @@
             <tr><th>Director</th><td><c:out value="${empty f.director ? 'Sin asignar' : f.director}" /></td></tr>
             <tr><th>Evaluador</th><td><c:out value="${empty f.evaluador ? 'Sin asignar' : f.evaluador}" /></td></tr>
             <c:if test="${not empty f.fecha_limite}"><tr><th>Fecha límite</th><td><c:out value="${f.fecha_limite}" /></td></tr></c:if>
-            <c:if test="${not empty f.sustentacion_fecha}"><tr><th>Sustentación</th><td><fmt:formatDate value="${f.sustentacion_fecha}" pattern="dd/MM/yyyy HH:mm" /><c:if test="${not empty f.sustentacion_lugar}"> · <c:out value="${f.sustentacion_lugar}" /></c:if></td></tr></c:if>
+            <c:if test="${not empty f.sustentacion_fecha}"><tr><th>Sustentación</th><td><c:out value="${f.sustentacion_txt}" /><c:if test="${not empty f.sustentacion_lugar}"> · <c:out value="${f.sustentacion_lugar}" /></c:if></td></tr></c:if>
             <c:if test="${f.papeles_solicitados}"><tr><th>Papeles de grado</th><td>Solicitados</td></tr></c:if>
           </table>
           <sql:query var="docs" dataSource="${bd}">

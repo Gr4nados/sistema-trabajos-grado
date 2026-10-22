@@ -8,7 +8,7 @@
 <%@ include file="/includes/conexion.jsp" %>
 <%-- RF-16: historial de versiones. Cada URL registrada queda como una version. --%>
 <sql:query var="docs" dataSource="${bd}">
-  SELECT d.tipo, d.version, d.fase, d.url, d.subido_en,
+  SELECT d.tipo, d.version, d.fase, d.url, DATE_FORMAT(d.subido_en, '%d/%m/%Y %H:%i') AS subido_en,
          CONCAT(u.nombres, ' ', u.apellidos) AS autor
   FROM documento d JOIN usuario u ON u.id_usuario = d.id_autor
   WHERE d.id_proyecto = (SELECT MAX(i.id_proyecto) FROM integrante i WHERE i.id_usuario = ?)

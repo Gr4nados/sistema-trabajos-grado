@@ -100,7 +100,7 @@
                               SEPARATOR '; ')
             FROM integrante i JOIN usuario u ON u.id_usuario = i.id_usuario
            WHERE i.id_proyecto = p.id_proyecto) AS estudiantes,
-         d.version, d.url, d.subido_en
+         d.version, d.url, DATE_FORMAT(d.subido_en, '%d/%m/%Y %H:%i') AS subido_en
   FROM proyecto p
   LEFT JOIN idea a ON a.id_idea = p.id_idea
   JOIN documento d ON d.id_proyecto = p.id_proyecto AND d.tipo = IF(p.fase = 2, 'Anteproyecto', 'Informe')

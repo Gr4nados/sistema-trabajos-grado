@@ -20,7 +20,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Elegir rol - Trabajos de Grado</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=0.9.3">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=0.9.4">
 </head>
 <body class="pagina-login">
   <div class="acceso">

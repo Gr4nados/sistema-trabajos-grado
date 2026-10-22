@@ -21,8 +21,8 @@ Los que bloqueen el flujo se detienen; los demás se resuelven con un supuesto y
 | 15 | Modalidad del proyecto vs modalidad de la idea | No se exige que coincidan | Pendiente |
 | 16 | Un estudiante, un proyecto | Solo puede tener un proyecto, sin importar su estado (un rechazo no lo cierra) | Supuesto mío |
 | 17 | Rechazo o aplazamiento en fases 2 a 5 | El proyecto conserva la fase y el estado queda Rechazado/Aplazado; el estudiante registra otra versión y vuelve a "En revisión" | Supuesto mío (aclara #5 y #6) |
-| 18 | Estado "a la espera del coordinador" | En fases 3 y 5, estado Aprobado = aprobado por el evaluador; el coordinador acepta (avanza) o rechaza | Supuesto mío |
-| 19 | Rechazo del coordinador en fases 3 y 5 | El estudiante corrige y el evaluador vuelve a revisar | Supuesto mío |
+| 18 | Estado "a la espera del coordinador" | Solo en la fase 5: estado Aprobado = aprobado por el evaluador; el coordinador da la aprobación final (avanza) o rechaza. La fase 3 no pasa por el coordinador | Supuesto mío |
+| 19 | Rechazo del coordinador en la fase 5 | El estudiante corrige el informe y el evaluador vuelve a revisar | Supuesto mío |
 | 20 | Calificación obligatoria | Director y evaluador siempre ponen nota (0.0 a 5.0), también al rechazar o aplazar; el coordinador no califica | Supuesto mío |
 | 21 | Evaluador aún sin asignar al aprobar el director | El proyecto espera en la fase 3 y se avisa a la coordinación | Supuesto mío |
 | 22 | Eliminar un documento | Solo el registrado en la fase actual y antes de que alguien lo revise | Supuesto mío |

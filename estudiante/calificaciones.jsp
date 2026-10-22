@@ -12,7 +12,7 @@
   La fase 1 es la decision del coordinador sobre la idea.
 --%>
 <sql:query var="revs" dataSource="${bd}">
-  SELECT r.fase, r.resultado, r.calificacion, r.comentario, r.revisada_en,
+  SELECT r.fase, r.resultado, r.calificacion, r.comentario, DATE_FORMAT(r.revisada_en, '%d/%m/%Y %H:%i') AS revisada_en,
          CASE r.rol_revisor
            WHEN 'Director' THEN CONCAT('Director: ', u.nombres, ' ', u.apellidos)
            WHEN 'Coordinador' THEN 'Coordinación'

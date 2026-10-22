@@ -80,7 +80,7 @@
 </c:if>
 
 <sql:query var="proyectos" dataSource="${bd}">
-  SELECT p.id_proyecto, p.radicado, p.sustentacion_fecha, p.sustentacion_lugar,
+  SELECT p.id_proyecto, p.radicado, p.sustentacion_fecha, DATE_FORMAT(p.sustentacion_fecha, '%d/%m/%Y %H:%i') AS sustentacion_txt, p.sustentacion_lugar,
          DATE_FORMAT(p.sustentacion_fecha, '%Y-%m-%dT%H:%i') AS fecha_input,
          a.titulo,
          (SELECT GROUP_CONCAT(CONCAT(u.nombres, ' ', u.apellidos) SEPARATOR ', ')
@@ -118,7 +118,7 @@
           <td><c:choose>
             <c:when test="${empty f.sustentacion_fecha}"><span class="insignia medio">Por programar</span></c:when>
             <c:otherwise><span class="insignia ok">Programada</span>
-              <fmt:formatDate value="${f.sustentacion_fecha}" pattern="dd/MM/yyyy HH:mm" />
+              <c:out value="${f.sustentacion_txt}" />
               <c:if test="${not empty f.sustentacion_lugar}"> · <c:out value="${f.sustentacion_lugar}" /></c:if></c:otherwise>
           </c:choose></td></tr>
     </table>

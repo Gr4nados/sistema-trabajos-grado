@@ -129,7 +129,8 @@ td.acciones form { display: inline; }
 
 /* ---------- Formularios y botones ---------- */
 label { display: block; margin: 14px 0 5px; font-weight: 600; font-size: .92rem; color: var(--verde-800); }
-input[type=text], input[type=password], input[type=url], input[type=number], input[type=date], select, textarea {
+input[type=text], input[type=password], input[type=url], input[type=number], input[type=date],
+input[type=datetime-local], input[type=time], input[type=email], input[type=search], select, textarea {
   width: 100%; padding: 10px 12px; border: 1px solid #cfcab9; border-radius: 10px; background: #fff;
   font: inherit; color: var(--tinta); transition: border-color .15s, box-shadow .15s; }
 input:focus, select:focus, textarea:focus { outline: none; border-color: var(--verde-600);
@@ -204,6 +205,12 @@ td.acciones button.peligro { margin: 0; padding: 6px 12px; font-size: .86rem; bo
 .acceso-form a.boton { display: flex; width: 100%; margin: 12px 0 0; }
 .acciones-fila { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .acciones-fila a.boton { margin: 0; }
+
+/* Boton de eliminar dentro de una fila de acciones */
+.acciones-fila form { margin: 0; }
+.acciones-fila button.peligro { margin: 0; padding: 6px 12px; font-size: .86rem; border-radius: 8px; }
+input[type=datetime-local], input[type=time] { min-height: 44px; }
+input[type=datetime-local]::-webkit-calendar-picker-indicator, input[type=date]::-webkit-calendar-picker-indicator { cursor: pointer; }
 
 /* Enlaces a documentos como etiquetas */
 a.chip-enlace { display: inline-block; max-width: min(100%, 440px); padding: 4px 12px; border-radius: 999px; background: var(--morado-suave);

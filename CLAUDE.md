@@ -52,6 +52,8 @@ Los includes son estáticos (`<%@ include %>`): comparten taglibs y variables co
 
 ## Convenciones de código
 
+- **Alias de columnas en `sql:query`:** JSTL nombra el resultado por el nombre *real* de la columna, no por su alias (`p.modalidad AS x` se lee como `modalidad`, y dos columnas con el mismo nombre real chocan y salen vacías). Con una expresión sí funciona el alias: `CONCAT(p.modalidad) AS x`.
+- **No usar `<fmt:formatDate>` con columnas `DATETIME`**: el conector de MySQL las entrega como `LocalDateTime` y la etiqueta solo acepta `java.util.Date` (error 500). Formatear en la consulta: `DATE_FORMAT(col, '%d/%m/%Y %H:%i') AS col`.
 - Parámetros siempre con `<sql:param>` (nunca concatenar); toda salida con `<c:out>` (excepto valores controlados por el sistema).
 - Cambios de varias tablas dentro de `<sql:transaction>` envuelto en `<c:catch var="fallo">`.
 - En un `UPDATE` de MySQL las asignaciones se evalúan de izquierda a derecha: poner `estado = IF(fase + 1 = 6, ...)` **antes** de `fase = fase + 1`.

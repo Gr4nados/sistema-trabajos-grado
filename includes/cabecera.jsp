@@ -11,8 +11,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0f3b24">
   <title><c:out value="${titulo}" /> - Trabajos de Grado</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=0.9.3">
-  <script src="${pageContext.request.contextPath}/js/app.js?v=0.9.3" defer></script>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/estilo.css?v=0.9.4">
+  <script src="${pageContext.request.contextPath}/js/app.js?v=0.9.4" defer></script>
 </head>
 <body>
 <%-- Iconos (se usan con <svg class="ico"><use href="#i-nombre"/></svg>) --%>

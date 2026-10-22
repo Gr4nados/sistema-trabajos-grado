@@ -7,7 +7,7 @@
 <c:if test="${empty sessionScope.idUsuario}"><c:redirect url="/login.jsp" /></c:if>
 <%@ include file="/includes/conexion.jsp" %>
 <sql:query var="res" dataSource="${bd}">
-  SELECT documento, codigo, nombres, apellidos, usuario, IF(activo, 1, 0) AS activo, creado_en,
+  SELECT documento, codigo, nombres, apellidos, usuario, IF(activo, 1, 0) AS activo, DATE_FORMAT(creado_en, '%d/%m/%Y %H:%i') AS creado_en,
          (SELECT GROUP_CONCAT(r.nombre ORDER BY r.id_rol SEPARATOR ', ')
             FROM usuario_rol ur JOIN rol r ON r.id_rol = ur.id_rol
            WHERE ur.id_usuario = u.id_usuario) AS roles

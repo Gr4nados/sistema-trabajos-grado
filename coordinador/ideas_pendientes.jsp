@@ -15,6 +15,8 @@
   - Rechazar: se libera la idea del proyecto para que el estudiante escoja otra.
   Cada decision queda en la tabla revision (RNF-08).
   Al asignar, el coordinador escribe el radicado del proyecto aceptado (obligatorio y unico).
+  OJO: JSTL nombra las columnas por su nombre REAL, no por el alias; por eso las dos modalidades
+  van dentro de CONCAT(...) (si no, chocan en "modalidad" y salen vacias).
 --%>
 <c:if test="${pageContext.request.method == 'POST'}">
   <sql:query var="objetivo" dataSource="${bd}">
@@ -80,7 +82,10 @@
       </c:catch>
       <c:choose>
         <c:when test="${empty fallo}">
-          <c:set var="mensaje" value="${asignar ? 'Idea asignada con el radicado ${radicado}: el proyecto avanzó a la fase 2.' : 'Idea rechazada: el estudiante podrá escoger otra.'}" scope="session" />
+          <c:choose>
+            <c:when test="${asignar}"><c:set var="mensaje" value="Idea asignada con el radicado ${radicado}: el proyecto avanzó a la fase 2." scope="session" /></c:when>
+            <c:otherwise><c:set var="mensaje" value="Idea rechazada: el estudiante podrá escoger otra." scope="session" /></c:otherwise>
+          </c:choose>
           <c:redirect url="/coordinador/ideas_pendientes.jsp" />
         </c:when>
         <c:when test="${fn:contains(fallo.message, 'Duplicate')}">
@@ -96,8 +101,8 @@
 </c:if>
 
 <sql:query var="pendientes" dataSource="${bd}">
-  SELECT p.id_proyecto, p.modalidad AS modalidad_proyecto,
-         a.titulo, a.objetivo_general, a.modalidad AS modalidad_idea,
+  SELECT p.id_proyecto, CONCAT(p.modalidad) AS modalidad_proyecto,
+         a.titulo, a.objetivo_general, CONCAT(a.modalidad) AS modalidad_idea,
          (SELECT GROUP_CONCAT(CONCAT(u.nombres, ' ', u.apellidos, ' (', u.documento, ')') SEPARATOR ', ')
             FROM integrante i JOIN usuario u ON u.id_usuario = i.id_usuario
            WHERE i.id_proyecto = p.id_proyecto) AS estudiantes,

@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.9.1 - Correcciones tras la prueba completa
+- Mensaje al aceptar una idea: mostraba `{radicado}` en lugar del número (una expresión dentro de otra no se evalúa). Ahora muestra, por ejemplo,
+  "Idea asignada con el radicado 2026-001: el proyecto avanzó a la fase 2."
+- Los campos de fecha y hora (`datetime-local`) tenían el aspecto por defecto del navegador; ahora usan el mismo estilo que el resto.
+- `estudiante/documentos.jsp`: el botón "Eliminar documento" queda en la misma fila que los demás, con icono.
+- `coordinador/ideas_pendientes.jsp`: las filas "Modalidad del proyecto" y "Modalidad de la idea" salían vacías (JSTL ignoraba los alias de columnas reales).
+- Error 500 al programar una sustentación: `fmt:formatDate` no acepta las fechas que entrega el conector. Afectaba el inicio del estudiante,
+  `coordinador/sustentaciones.jsp` y `coordinador/buscar.jsp`. Las fechas se formatean ahora en SQL (`DATE_FORMAT`).
+- Las fechas de todas las pantallas se muestran como `14/10/2026 09:40` (antes `2026-10-14T09:40:42`).
+- Prueba completa de punta a punta en un entorno aislado (107 comprobaciones: 6 fases, rechazos, aplazamientos, radicado, sustentación,
+  papeles de grado, seguridad por rol y visibilidad del evaluador).
+
 ## v0.9 - Continuidad de las fases
 - Fases con sus nombres: 1 Pago, 2 Propuesta I, 3 Propuesta II, 4 Informe I, 5 Informe II, 6 Fase final.
 - **Fase 3:** decide solo el evaluador; al aprobar, el proyecto avanza a la fase 4 (antes esperaba al coordinador).
